@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        app:showAsAction="always"
+        android:title=""
+        android:icon="@drawable/ic_menu_vert"
+        >
+        <menu android:id="@+id/menuItem">
+
+            <item
+                app:showAsAction="never"
+                android:title="@string/text_edit"
+                android:icon="@drawable/ic_edit"
+                />
+
+            <item
+                app:showAsAction="never"
+                android:title="@string/text_payment"
+                android:icon="@drawable/ic_payment"
+                />
+
+            <item
+                app:showAsAction="never"
+                android:title="@string/text_rent"
+                android:icon="@drawable/ic_apartment_green"
+                />
+
+            <item
+                app:showAsAction="never"
+                android:title="@string/text_delete"
+                android:icon="@drawable/ic_delete"
+                />
+        </menu>
+
+    </item>
+
+</menu>

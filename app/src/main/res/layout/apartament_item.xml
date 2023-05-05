@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    android:elevation="2dp"
+    android:layout_margin="20dp"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_apartament"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/logo"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <View
+            android:id="@+id/background_price"
+            android:layout_width="150dp"
+            android:layout_height="90dp"
+            android:background="@color/black_opacity"
+            app:layout_constraintLeft_toLeftOf="@id/image_apartament"
+            app:layout_constraintBottom_toBottomOf="@id/image_apartament"
+            />
+
+        <TextView
+            android:id="@+id/id_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_rent"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_semibold"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="@id/background_price"
+            app:layout_constraintTop_toTopOf="@id/background_price"
+            app:layout_constraintBottom_toTopOf="@id/price"
+            />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="@id/background_price"
+            app:layout_constraintBottom_toBottomOf="@id/background_price"
+            app:layout_constraintTop_toBottomOf="@id/id_value"
+            />
+
+        <TextView
+            android:id="@+id/txt_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginLeft="5dp"
+            android:maxLines="1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_apartament"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

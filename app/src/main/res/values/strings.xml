@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">Administração de apartamentos</string>
+
+    //Main screen strings
+    <string name="title">ADMINSTRAÇÃO DE APARTAMENTOS</string>
+
+    //Login screen strings
+    <string name="hint_email">E-mail</string>
+    <string name="hint_senha">Senha</string>
+    <string name="text_button_entrar">Entrar</string>
+    <string name="text_button_newconta">Criar conta</string>
+    <string name="text_forgot_password">Esqueceu a senha?</string>
+    <string name="ou">ou</string>
+
+    //ForgotPassword screen strings
+    <string name="forgot_password">Esqueceu sua senha?</string>
+    <string name="recovery_instructions">Para recuperar seu acesso, preencha o campo com o email cadastrado</string>
+    <string name="button_recovery">Recuperar senha</string>
+
+    //Registration screen strings
+    <string name="hint_name">Nome</string>
+    <string name="hint_last_name">Sobrenome</string>
+    <string name="hint_phone">Telefone</string>
+    <string name="text_button_cadastrar">Cadastrar</string>
+
+    //drawer activity
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_exit">Sair</string>
+
+    <string name="menu_apartamentList">Apartamentos</string>
+    <string name="menu_registration">Cadastrar Apartamento</string>
+    <string name="menu_calendar">Calendario</string>
+    <string name="menu_settings">Configurações</string>
+
+    //Detail screen strings
+    <string name="text_rent">Aluguel</string>
+    <string name="information_property">Informações da propriedade</string>
+    <string name="text_localization">Localização</string>
+    <string name="energy">Energia</string>
+    <string name="water">Água</string>
+    <string name="status">Status</string>
+    <string name="text_due_date">Data de vencimento</string>
+    <string name="text_days_delay">Dias de atraso</string>
+    <string name="text_renter">Locatário</string>
+    <string name="text_edit">Editar</string>
+    <string name="text_payment">Pagamento</string>
+    <string name="text_delete">Excluir</string>
+
+    //RegistrationApartament screen strings
+    <string name="hint_cep">Cep</string>
+    <string name="hint_logradouro">Logradouro</string>
+    <string name="hint_district">Bairro</string>
+    <string name="hint_number">N°</string>
+    <string name="hint_city">Cidade</string>
+    <string name="hint_state">Estado</string>
+    <string name="hint_energy">Energia</string>
+    <string name="hint_water">Água</string>
+    <string name="hint_price">Valor</string>
+    <string name="hint_type">Modelo</string>
+    <string name="apartament_information">Insira as informações sobre o apartamento</string>
+    <string name="button_cont">Continuar</string>
+    <string name="type_property">Informe o tipo da propriedade</string>
+    <string name="type_apartament">Apartamento</string>
+    <string name="type_kitnet">Kitnet</string>
+    <string name="type_point">Ponto Comercial</string>
+    <string name="type_house">Casa</string>
+    <string name="info_image">Insira no máximo 3 imagens</string>
+    <string name="upload_image">Fazer upload da imagem</string>
+    <string name="button_search">Buscar</string>
+    <string name="button_registration">Cadastrar</string>
+
+
+    //Dialog_image
+    <string name="select_options">Selecione uma opção</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_password">Senha</string>
+    <string name="user_email">Email</string>
+
+</resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.12" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_buttom_back.xml" value="0.2" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_button_back.xml" value="0.245" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_button_cadastrar.xml" value="0.1" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_button_entrar.xml" value="0.1" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_edittext.xml" value="0.1" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_forgot_password.xml" value="0.1" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_ic_camera.xml" value="0.1815" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_image_price.xml" value="0.175" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_info.xml" value="0.1645" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_options_image.xml" value="0.179" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_recycler_view.xml" value="0.102" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_text_go_back.xml" value="0.179" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_view_image.xml" value="0.182" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_view_info.xml" value="0.182" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_view_top.xml" value="0.1" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/background_view_top_green.xml" value="0.1" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_arrow_back.xml" value="0.1815" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_baseline_arrow_back_ios_new_24.xml" value="0.179" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_camera.xml" value="0.1815" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_delete.xml" value="0.245" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_down.xml" value="0.179" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_exit.xml" value="0.1625" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_launcher_background.xml" value="0.12" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_load.xml" value="0.182" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_menu_camera.xml" value="0.12" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.12" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_navigate_next.xml" value="0.179" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_next.xml" value="0.179" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/ic_phone.xml" value="0.12" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/drawable/side_nav_bar.xml" value="0.12" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_detail.xml" value="0.264" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_edit_apartament.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_edit_profile.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_forgot_password.xml" value="0.23489583333333333" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_home.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_login.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_main.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_registration.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_registration_apartament.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/activity_registration_apartament_finish.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/apartament_item.xml" value="0.18671875" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/app_bar_home.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/calendar_item.xml" value="0.13768115942028986" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/content_home.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/dialog_confirm.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/dialog_corfirm.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/dialog_image.xml" value="0.264" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_apartament_list.xml" value="0.14492753623188406" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_calendar.xml" value="0.2" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_gallery.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_home.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_registration_apartament.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_settings.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/fragment_slideshow.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/layout/nav_header_home.xml" value="0.13722826086956522" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/menu/activity_home_drawer.xml" value="0.24461538461538462" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/menu/activity_main_drawer.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/menu/home.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/menu/menu_detail.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1725" />
+        <entry key="..\:/Users/55989/AndroidStudioProjects/Administraodeapartamentos/app/src/main/res/xml/file_paths.xml" value="0.24895833333333334" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

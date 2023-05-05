@@ -1,0 +1,469 @@
+package com.henriqueapps.administraoDeApartamentos.ui.registrationApartament
+
+import android.Manifest
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.henriqueapps.administraoDeApartamentos.HomeActivity
+import com.henriqueapps.administraoDeApartamentos.R
+import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRegistrationApartamentFinishBinding
+import java.io.ByteArrayOutputStream
+import java.util.*
+
+
+class RegistrationApartamentFinish : AppCompatActivity() {
+
+    private lateinit var binding: ActivityRegistrationApartamentFinishBinding
+
+    private var type: String = ""
+    private lateinit var dialog: AlertDialog
+    private lateinit var dialogTwo: AlertDialog
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private var byteOne: ByteArray = "".toByteArray()
+    private var byteTwo: ByteArray = "".toByteArray()
+    private var byteTree: ByteArray = "".toByteArray()
+
+    companion object {
+        private val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+    private val galleryRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission ->
+            if (permission) {
+                galleryResult.launch(
+                    Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    )
+                )
+            } else {
+                showDialogPermission()
+            }
+        }
+
+    private val galleryResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.data?.data != null) {
+                val bitmap: Bitmap = if(Build.VERSION.SDK_INT < 28){
+                    MediaStore.Images.Media.getBitmap(baseContext.contentResolver, result.data?.data)
+                }else{
+                    val source = ImageDecoder.createSource(this.contentResolver, result.data?.data!!)
+                    ImageDecoder.decodeBitmap(source)
+                }
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                if (byteOne.toString().isEmpty()) {
+                    byteOne = baos.toByteArray()
+                    binding.txtImage1.text = "Imagem carregada!"
+                    binding.iconImage1.setImageResource(R.drawable.ic_clear)
+                } else if (byteTwo.toString().isEmpty()) {
+                    byteTwo = baos.toByteArray()
+                    binding.txtImage2.text = "Imagem carregada!"
+                    binding.iconImage2.setImageResource(R.drawable.ic_clear)
+                } else if (byteTree.toString().isEmpty()) {
+                    byteTree = baos.toByteArray()
+                    binding.txtImage3.text = "Imagem carregada!"
+                    binding.iconImage3.setImageResource(R.drawable.ic_clear)
+                }
+            }
+        }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityRegistrationApartamentFinishBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        title = ""
+
+        checkType()
+
+
+        binding.buttonRegistration.setOnClickListener {
+            propertyRegistration()
+        }
+
+        binding.iconImage1.setOnClickListener {
+            if (binding.txtImage1.text == "Imagem carregada!") {
+                binding.txtImage1.text = "Fazer upload da imagem"
+                byteOne = "".toByteArray()
+                binding.iconImage1.setImageResource(R.drawable.ic_upload)
+            } else {
+                DialogImageGallery()
+            }
+
+        }
+        binding.iconImage2.setOnClickListener {
+            if (binding.txtImage2.text == "Imagem carregada!") {
+                binding.txtImage2.text = "Fazer upload da imagem"
+                byteTwo = "".toByteArray()
+                binding.iconImage2.setImageResource(R.drawable.ic_upload)
+            } else {
+                DialogImageGallery()
+            }
+        }
+        binding.iconImage3.setOnClickListener {
+            if (binding.txtImage3.text == "Imagem carregada!") {
+                binding.txtImage3.text = "Fazer upload da imagem"
+                byteTree = "".toByteArray()
+                binding.iconImage3.setImageResource(R.drawable.ic_upload)
+
+            } else {
+                DialogImageGallery()
+            }
+        }
+    }
+
+    private fun checkType() {
+        val ck_apartament = binding.ckApartament
+        val ck_kitnet = binding.ckKitnet
+        val ck_house = binding.ckHouse
+        val ck_point = binding.ckPoint
+
+        ck_house.setOnClickListener {
+            if (ck_house.isChecked) {
+                type = "Casa"
+            } else if (!ck_house.isChecked) {
+                type = ""
+            }
+            ck_apartament.isChecked = false
+            ck_point.isChecked = false
+            ck_kitnet.isChecked = false
+        }
+        ck_kitnet.setOnClickListener {
+            if (ck_kitnet.isChecked) {
+                type = "Kitnet"
+            } else if (!ck_kitnet.isChecked) {
+                type = ""
+            }
+            ck_apartament.isChecked = false
+            ck_house.isChecked = false
+            ck_point.isChecked = false
+        }
+        ck_point.setOnClickListener {
+            if (ck_point.isChecked) {
+                type = "Ponto Comercial"
+            } else if (!ck_point.isChecked) {
+                type = ""
+            }
+            ck_apartament.isChecked = false
+            ck_house.isChecked = false
+            ck_kitnet.isChecked = false
+        }
+        ck_apartament.setOnClickListener {
+            if (ck_apartament.isChecked) {
+                type = "Apartamento"
+            } else if (!ck_apartament.isChecked) {
+                type = ""
+            }
+            ck_kitnet.isChecked = false
+            ck_house.isChecked = false
+            ck_point.isChecked = false
+        }
+
+    }
+
+    private fun permissionVerification(permission: String) =
+        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+
+    private fun galleryPermissionVerification() {
+        val galleryPermission =
+            permissionVerification(RegistrationApartamentFinish.GALLERY_PERMISSION)
+
+        when {
+            galleryPermission -> {
+                galleryResult.launch(
+                    Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    )
+                )
+            }
+
+            shouldShowRequestPermissionRationale(RegistrationApartamentFinish.GALLERY_PERMISSION) -> showDialogPermission()
+
+            else -> galleryRequest.launch(RegistrationApartamentFinish.GALLERY_PERMISSION)
+        }
+    }
+
+    private fun showDialogPermission() {
+        val buider = AlertDialog.Builder(this)
+            .setTitle("Atenção")
+            .setMessage("Precisamos do acesso a galeria do dispositivo, deseja permitir agora?")
+            .setNegativeButton("Não") { _, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Sim") { _, _ ->
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", packageName, null)
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+
+        dialogTwo = buider.create()
+        dialogTwo.show()
+    }
+
+    private fun DialogImageGallery() {
+
+        val selectPhoto = AlertDialog.Builder(this)
+            .setTitle("Origem da foto")
+            .setMessage("Por favor, selecione a origem da foto")
+            .setPositiveButton("Câmera",
+                DialogInterface.OnClickListener { dialogInterface, id ->
+                    pictureVerificationPermission()
+                })
+            .setNegativeButton("Galeria",
+                DialogInterface.OnClickListener { dialogInterface, id ->
+                    galleryPermissionVerification()
+                })
+
+        dialog = selectPhoto.create()
+        dialog.show()
+
+    }
+
+    private fun pictureVerificationPermission() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            val baos = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
+            if (byteOne.toString().isEmpty()) {
+                byteOne = baos.toByteArray()
+                binding.txtImage1.text = "Imagem carregada!"
+                binding.iconImage1.setImageResource(R.drawable.ic_clear)
+            } else if (byteTwo.toString().isEmpty()) {
+                byteTwo = baos.toByteArray()
+                binding.txtImage2.text = "Imagem carregada!"
+                binding.iconImage2.setImageResource(R.drawable.ic_clear)
+            } else if (byteTree.toString().isEmpty()) {
+                byteTree = baos.toByteArray()
+                binding.txtImage3.text = "Imagem carregada!"
+                binding.iconImage3.setImageResource(R.drawable.ic_clear)
+            }
+        }
+    }
+
+    private fun propertyRegistration(){
+        val cep = intent.getStringExtra("cep").toString()
+        val logradouro = intent.getStringExtra("logradouro").toString()
+        val district = intent.getStringExtra("district").toString()
+        val city = intent.getStringExtra("city").toString()
+        val state = intent.getStringExtra("state").toString()
+        var number = intent.getStringExtra("number").toString()
+        val water = intent.getStringExtra("water").toString()
+        val energy = intent.getStringExtra("energy").toString()
+        val price = intent.getStringExtra("price").toString()
+        val type = type
+
+        if(number.isEmpty()){
+            number = "Sem numero"
+        }
+
+        if(!type.isEmpty()){
+            val archiveUuid = UUID.randomUUID().toString()
+            val archiveNameOne = UUID.randomUUID().toString()
+            val archiveNameTwo = UUID.randomUUID().toString()
+            val archiveNameTree = UUID.randomUUID().toString()
+
+            val referenceOne = FirebaseStorage.getInstance().getReference("/image/$archiveNameOne")
+            val referenceTwo = FirebaseStorage.getInstance().getReference("/image/$archiveNameTwo")
+            val referenceTree = FirebaseStorage.getInstance().getReference("/image/$archiveNameTree")
+
+            val db = FirebaseFirestore.getInstance()
+            val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
+
+            val intent = Intent(this, HomeActivity::class.java)
+
+            if(!byteOne.toString().isEmpty() && !byteTwo.toString().isEmpty() && !byteTree.toString().isEmpty()){
+                referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
+                    referenceTwo.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
+                        referenceTree.putBytes(byteTree).addOnSuccessListener { byteFirestoreTree ->
+                            val imageByteOne = byteFirestoreOne.toString()
+                            val imageByteTwo = byteFirestoreTwo.toString()
+                            val imageByteTree = byteFirestoreTree.toString()
+                            val apartament: MutableMap<String, String> = HashMap()
+
+                            apartament["owner"] = usuarioId
+                            apartament["cep"] = cep
+                            apartament["logradouro"] = logradouro
+                            apartament["number"] = number
+                            apartament["district"] = district
+                            apartament["city"] = city
+                            apartament["state"] = state
+                            apartament["water"] = water
+                            apartament["energy"] = energy
+                            apartament["price"] = price
+                            apartament["type"] = type
+                            apartament["imageOne"] = imageByteOne
+                            apartament["imageTwo"] = imageByteTwo
+                            apartament["imageTree"] = imageByteTree
+
+                            val documentReference = db.collection("Properties").document(archiveUuid)
+                            documentReference.set(apartament).addOnSuccessListener {
+                                binding.progressCircular.isVisible = true
+                                Toast.makeText(
+                                    this,
+                                    "Propriedade cadastrada com sucesso!",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                startActivity(intent)
+                            }.addOnFailureListener {
+                                Log.i("RegistrationApartamentFinish", it.toString())
+                            }
+                        }.addOnFailureListener {
+                            Log.i("RegistrationApartamentFinish", it.toString())
+                        }
+                    }.addOnFailureListener {
+                        Log.i("RegistrationApartamentFinish", it.toString())
+                    }
+                }.addOnFailureListener{
+                    Log.i("RegistrationApartamentFinish", it.toString())
+                }
+            }else if (!byteOne.toString().isEmpty() && !byteTwo.toString().isEmpty()){
+                referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
+                    referenceTwo.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
+                        val imageByteOne = byteFirestoreOne.toString()
+                        val imageByteTwo = byteFirestoreTwo.toString()
+                        val imageByteTree = ""
+                        val apartament: MutableMap<String, String> = HashMap()
+
+                        apartament["usuario"] = usuarioId
+                        apartament["cep"] = cep
+                        apartament["logradouro"] = logradouro
+                        apartament["number"] = number
+                        apartament["district"] = district
+                        apartament["city"] = city
+                        apartament["state"] = state
+                        apartament["water"] = water
+                        apartament["energy"] = energy
+                        apartament["price"] = price
+                        apartament["type"] = type
+                        apartament["imageOne"] = imageByteOne
+                        apartament["imageTwo"] = imageByteTwo
+                        apartament["imageTree"] = imageByteTree
+
+                        val documentReference = db.collection("Properties").document(archiveUuid)
+                        documentReference.set(apartament).addOnSuccessListener {
+                            binding.progressCircular.isVisible = true
+                            Toast.makeText(
+                                this,
+                                "Propriedade cadastrada com sucesso!",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                            startActivity(intent)
+                        }.addOnFailureListener {
+                            Log.i("RegistrationApartamentFinish", it.toString())
+                        }
+                    }.addOnFailureListener {
+                        Log.i("RegistrationApartamentFinish", it.toString())
+                    }
+                }.addOnFailureListener{
+                    Log.i("RegistrationApartamentFinish", it.toString())
+                }
+            }else if(!byteOne.toString().isEmpty()){
+                referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
+                    val imageByteOne = byteFirestoreOne.toString()
+                    val imageByteTwo = ""
+                    val imageByteTree = ""
+                    val apartament: MutableMap<String, String> = HashMap()
+
+                    apartament["usuario"] = usuarioId
+                    apartament["cep"] = cep
+                    apartament["logradouro"] = logradouro
+                    apartament["number"] = number
+                    apartament["district"] = district
+                    apartament["city"] = city
+                    apartament["state"] = state
+                    apartament["water"] = water
+                    apartament["energy"] = energy
+                    apartament["price"] = price
+                    apartament["type"] = type
+                    apartament["imageOne"] = imageByteOne
+                    apartament["imageTwo"] = imageByteTwo
+                    apartament["imageTree"] = imageByteTree
+
+                    val documentReference = db.collection("Properties").document(archiveUuid)
+                    documentReference.set(apartament).addOnSuccessListener {
+                        binding.progressCircular.isVisible = true
+                        Toast.makeText(
+                            this,
+                            "Propriedade cadastrada com sucesso!",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        startActivity(intent)
+                    }.addOnFailureListener {
+                        Log.i("RegistrationApartamentFinish", it.toString())
+                    }
+                }.addOnFailureListener{
+                    Log.i("RegistrationApartamentFinish", it.toString())
+                }
+            }else{
+                val imageByteOne = ""
+                val imageByteTwo = ""
+                val imageByteTree = ""
+                val apartament: MutableMap<String, String> = HashMap()
+
+                apartament["usuario"] = usuarioId
+                apartament["cep"] = cep
+                apartament["logradouro"] = logradouro
+                apartament["number"] = number
+                apartament["district"] = district
+                apartament["city"] = city
+                apartament["state"] = state
+                apartament["water"] = water
+                apartament["energy"] = energy
+                apartament["price"] = price
+                apartament["type"] = type
+                apartament["imageOne"] = imageByteOne
+                apartament["imageTwo"] = imageByteTwo
+                apartament["imageTree"] = imageByteTree
+
+                val documentReference = db.collection("Properties").document(archiveUuid)
+                documentReference.set(apartament).addOnSuccessListener {
+                    binding.progressCircular.isVisible = true
+                    Toast.makeText(
+                        this,
+                        "Propriedade cadastrada com sucesso!",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    startActivity(intent)
+                }.addOnFailureListener {
+                    Log.i("RegistrationApartamentFinish", it.toString())
+                }
+            }
+        }else{
+            Toast.makeText(this, "Insira o tipo da propriedade!", Toast.LENGTH_SHORT).show()
+        }
+    }
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/edit_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Editar dados"
+        android:padding="10dp"
+        android:textSize="17sp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/black"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/background_button_entrar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notificações"
+        android:padding="10dp"
+        android:textSize="17sp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/black"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_button_entrar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_data"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/delete_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Excluir conta"
+        android:padding="10dp"
+        android:textSize="17sp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/black"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_button_entrar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notification"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

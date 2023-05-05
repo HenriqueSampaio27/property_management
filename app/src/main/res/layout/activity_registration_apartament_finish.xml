@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.registrationApartament.RegistrationApartamentFinish">
+
+        <TextView
+            android:id="@+id/info_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_property"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/ck_apartament"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_apartament"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/black"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintTop_toTopOf="@id/info_type"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <CheckBox
+            android:id="@+id/ck_kitnet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_kitnet"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/black"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintTop_toTopOf="@id/ck_apartament"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <CheckBox
+            android:id="@+id/ck_house"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_house"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/black"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintTop_toTopOf="@id/ck_kitnet"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <CheckBox
+            android:id="@+id/ck_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type_point"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/black"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintTop_toTopOf="@id/ck_house"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <View
+            android:id="@+id/background_type"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/background_view_info"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/info_type"
+            app:layout_constraintBottom_toBottomOf="@id/ck_point"
+            />
+
+        <TextView
+            android:id="@+id/info_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_image"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="40dp"
+            app:layout_constraintTop_toBottomOf="@id/ck_point"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <View
+            android:id="@+id/view_image1"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_view_image"
+            app:layout_constraintTop_toBottomOf="@id/info_image"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/txt_image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_image"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintTop_toTopOf="@id/view_image1"
+            app:layout_constraintBottom_toBottomOf="@id/view_image1"
+            app:layout_constraintLeft_toLeftOf="@id/view_image1"
+            app:layout_constraintRight_toLeftOf="@id/icon_image1"
+            />
+
+        <ImageView
+            android:id="@+id/icon_image1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_upload"
+            app:layout_constraintTop_toTopOf="@id/view_image1"
+            app:layout_constraintBottom_toBottomOf="@id/view_image1"
+            app:layout_constraintRight_toRightOf="@id/view_image1"
+            app:layout_constraintLeft_toRightOf="@id/txt_image1"
+            />
+
+        <View
+            android:id="@+id/view_image2"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_view_image"
+            app:layout_constraintTop_toBottomOf="@id/view_image1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/txt_image2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_image"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintTop_toTopOf="@id/view_image2"
+            app:layout_constraintBottom_toBottomOf="@id/view_image2"
+            app:layout_constraintLeft_toLeftOf="@id/view_image2"
+            app:layout_constraintRight_toLeftOf="@id/icon_image2"
+            />
+
+        <ImageView
+            android:id="@+id/icon_image2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_upload"
+            app:layout_constraintTop_toTopOf="@id/view_image2"
+            app:layout_constraintBottom_toBottomOf="@id/view_image2"
+            app:layout_constraintRight_toRightOf="@id/view_image2"
+            app:layout_constraintLeft_toRightOf="@id/txt_image2"
+            />
+
+        <View
+            android:id="@+id/view_image3"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/background_view_image"
+            app:layout_constraintTop_toBottomOf="@id/view_image2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/txt_image3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_image"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintTop_toTopOf="@id/view_image3"
+            app:layout_constraintBottom_toBottomOf="@id/view_image3"
+            app:layout_constraintLeft_toLeftOf="@id/view_image3"
+            app:layout_constraintRight_toLeftOf="@id/icon_image3"
+            />
+
+        <ImageView
+            android:id="@+id/icon_image3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_upload"
+            app:layout_constraintTop_toTopOf="@id/view_image3"
+            app:layout_constraintBottom_toBottomOf="@id/view_image3"
+            app:layout_constraintRight_toRightOf="@id/view_image3"
+            app:layout_constraintLeft_toRightOf="@id/txt_image3"
+            />
+
+        <View
+            android:id="@+id/background_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/background_view_info"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/info_image"
+            app:layout_constraintBottom_toBottomOf="@id/view_image3"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_registration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_registration"
+            android:fontFamily="@font/montserrat_semibold"
+            android:padding="15dp"
+            android:textSize="18sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/background_button_entrar"
+            app:layout_constraintTop_toBottomOf="@id/view_image3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/progress_circular"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="75dp"
+            android:visibility="gone"
+            android:indeterminateTint="@color/dark_cyan_green"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_registration"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

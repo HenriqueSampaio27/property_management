@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "626251767910",
+    "project_id": "admapartamentos-6393b",
+    "storage_bucket": "admapartamentos-6393b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626251767910:android:bb63959b08e301cc4fcda7",
+        "android_client_info": {
+          "package_name": "com.henriqueapps.administraoDeApartamentos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "626251767910-uokm4h60sbh1tuu7v2ot2t1spg335va0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCHZRLRFRGmygu_uVW26bQRSjSvfTfvPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "626251767910-uokm4h60sbh1tuu7v2ot2t1spg335va0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
