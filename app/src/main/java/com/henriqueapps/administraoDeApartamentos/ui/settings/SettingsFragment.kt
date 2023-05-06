@@ -77,7 +77,9 @@ class SettingsFragment : Fragment() {
             .setView(inflater.inflate(R.layout.dialog_confirm, null))
             .setPositiveButton("Confirmar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
-                    verificationDelete()
+                    val bindingDialog = DialogConfirmBinding.inflate(layoutInflater)
+                    val password = bindingDialog.password.text.toString()
+                    verificationDelete(password)
                 })
             .setNegativeButton("Cancelar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
@@ -89,9 +91,7 @@ class SettingsFragment : Fragment() {
 
     }
 
-    private fun verificationDelete() {
-        val bindingDialog = DialogConfirmBinding.inflate(layoutInflater)
-        val password = bindingDialog.password.text.toString()
+    private fun verificationDelete(password: String) {
         val db = FirebaseFirestore.getInstance()
         val user = FirebaseAuth.getInstance().currentUser
         val userUid = FirebaseAuth.getInstance().currentUser!!.uid

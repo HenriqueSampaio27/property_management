@@ -74,12 +74,21 @@
     <string name="button_search">Buscar</string>
     <string name="button_registration">Cadastrar</string>
 
+    //profile edit screen strings
+    <string name="button_edit_email">Alterar email</string>
+    <string name="button_edit_password">Alterar senha</string>
+    <string name="button_edit_phone">Alterar telefone</string>
+    <string name="button_update">Salvar alterações</string>
 
     //Dialog_image
     <string name="select_options">Selecione uma opção</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="user_password">Senha</string>
+
+    //Dialog_update_email
     <string name="user_email">Email</string>
+    //Dialog_update_phone
+    <string name="user_phone">Telefone</string>
 
 </resources>

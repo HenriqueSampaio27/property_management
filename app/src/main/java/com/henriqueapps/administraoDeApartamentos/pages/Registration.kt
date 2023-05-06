@@ -113,14 +113,14 @@ class Registration : AppCompatActivity() {
                     Toast.makeText(this, "Preencha um telefone válido!", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    cadastrar(email, password, name, lastName, phone)
+                    register(email, password, name, lastName, phone)
 
                 }
             }
         }
     }
 
-    private fun cadastrar(
+    private fun register(
         email: String,
         password: String,
         name: String,
@@ -130,7 +130,7 @@ class Registration : AppCompatActivity() {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    salvarUsuario(name, lastName, phone)
+                    saveUser(name, lastName, phone)
                 }
             }.addOnFailureListener {
             val erro = it
@@ -154,7 +154,7 @@ class Registration : AppCompatActivity() {
         }
     }
 
-    private fun salvarUsuario(name: String, lastName: String, phone: String) {
+    private fun saveUser(name: String, lastName: String, phone: String) {
         val archiveName = UUID.randomUUID().toString()
         val reference = FirebaseStorage.getInstance().getReference("/imagens/$archiveName")
         if(byte.toString().isEmpty()){
