@@ -5,7 +5,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
+//import android.widget.TextView
+//import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -13,12 +14,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.bumptech.glide.Glide
+//import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityHomeBinding
 import com.henriqueapps.administraoDeApartamentos.pages.Login
+import com.henriqueapps.administraoDeApartamentos.pages.Notifications
 
 class HomeActivity : AppCompatActivity() {
 
@@ -65,6 +67,10 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        if (id == R.id.button_notifications){
+            val intent = Intent(this, Notifications::class.java)
+            startActivity(intent)
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -77,17 +83,17 @@ class HomeActivity : AppCompatActivity() {
         super.onStart()
         val db = FirebaseFirestore.getInstance()
         val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
-        val emailID = FirebaseAuth.getInstance().currentUser!!.email
+        //val emailID = FirebaseAuth.getInstance().currentUser!!.email
 
         val documentReference = db.collection("Usuarios").document(usuarioId)
         documentReference.addSnapshotListener { value, error ->
-            if (value != null) {
+            //if (value != null) {
                 //Glide.with(applicationContext).load(value.getString("image")).into(findViewById(R.id.imageAvatar))
                 //val name = findViewById<TextView>(R.id.nameUser)
                 //name.setText(value.getString("name"))
                 //val email = findViewById<TextView>(R.id.emailUser)
                 //email.setText(emailID)
-            }
+            //}
         }
     }
 }

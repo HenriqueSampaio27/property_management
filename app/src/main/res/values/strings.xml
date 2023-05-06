@@ -80,6 +80,10 @@
     <string name="button_edit_phone">Alterar telefone</string>
     <string name="button_update">Salvar alterações</string>
 
+    //notifications screen strings
+    <string name="tittle_notifi">Notificações</string>
+    <string name="notifi_null">Sem notificações</string>
+
     //Dialog_image
     <string name="select_options">Selecione uma opção</string>
     <!-- TODO: Remove or change this placeholder text -->

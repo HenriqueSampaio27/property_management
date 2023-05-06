@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.henriqueapps.administraoDeApartamentos">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -22,45 +22,48 @@
         android:theme="@style/Theme.AdministraçãoDeApartamentos"
         tools:targetApi="31">
         <activity
+            android:name=".pages.Notifications"
+            android:exported="false" />
+        <activity
             android:name=".pages.EditProfile"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ui.registrationApartament.RegistrationApartamentFinish"
             android:exported="false"
             android:parentActivityName=".ui.registrationApartament.RegistrationApartament"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".ui.registrationApartament.RegistrationApartament"
             android:exported="false"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".pages.Detail"
             android:exported="false"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.AdministraçãoDeApartamentos.NoActionBar" />
         <activity
             android:name=".pages.ForgotPassword"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".pages.Registration"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".pages.Login"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
