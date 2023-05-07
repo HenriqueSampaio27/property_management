@@ -125,7 +125,7 @@
             />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_cadastrar"
+            android:id="@+id/button_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/buttom_save"
