@@ -22,6 +22,12 @@
         android:theme="@style/Theme.AdministraçãoDeApartamentos"
         tools:targetApi="31">
         <activity
+            android:name=".pages.AddImage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.EditApartament"
+            android:exported="false" />
+        <activity
             android:name=".pages.Notifications"
             android:exported="false" />
         <activity
@@ -31,39 +37,39 @@
             android:name=".ui.registrationApartament.RegistrationApartamentFinish"
             android:exported="false"
             android:parentActivityName=".ui.registrationApartament.RegistrationApartament"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.registrationApartament.RegistrationApartament"
             android:exported="false"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.Detail"
             android:exported="false"
             android:parentActivityName=".HomeActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AdministraçãoDeApartamentos.NoActionBar" />
         <activity
             android:name=".pages.ForgotPassword"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.Registration"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.Login"
             android:exported="false"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

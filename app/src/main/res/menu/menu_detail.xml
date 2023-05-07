@@ -10,24 +10,28 @@
         <menu android:id="@+id/menuItem">
 
             <item
+                android:id="@+id/menu_edit"
                 app:showAsAction="never"
                 android:title="@string/text_edit"
                 android:icon="@drawable/ic_edit"
                 />
 
             <item
+                android:id="@+id/menu_payment"
                 app:showAsAction="never"
                 android:title="@string/text_payment"
                 android:icon="@drawable/ic_payment"
                 />
 
             <item
+                android:id="@+id/menu_rent"
                 app:showAsAction="never"
                 android:title="@string/text_rent"
                 android:icon="@drawable/ic_apartment_green"
                 />
 
             <item
+                android:id="@+id/menu_delete"
                 app:showAsAction="never"
                 android:title="@string/text_delete"
                 android:icon="@drawable/ic_delete"

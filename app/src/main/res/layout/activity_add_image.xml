@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_cyan_green"
+        tools:context=".pages.AddImage">
+
+        <View
+            android:id="@+id/view_top"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/background_view_top"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/button_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintTop_toTopOf="@id/view_top"
+            app:layout_constraintLeft_toLeftOf="@id/view_top"
+            app:layout_constraintBottom_toBottomOf="@id/view_top"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_one"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_top"
+            />
+
+        <View
+            android:id="@+id/background_ic_camera_one"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/background_ic_camera"
+            app:layout_constraintBottom_toBottomOf="@id/image_one"
+            app:layout_constraintRight_toRightOf="@id/image_one"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintTop_toTopOf="@id/background_ic_camera_one"
+            app:layout_constraintBottom_toBottomOf="@id/background_ic_camera_one"
+            app:layout_constraintRight_toRightOf="@id/background_ic_camera_one"
+            app:layout_constraintLeft_toLeftOf="@id/background_ic_camera_one"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_two"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_one"
+            />
+
+        <View
+            android:id="@+id/background_ic_camera_two"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/background_ic_camera"
+            app:layout_constraintBottom_toBottomOf="@id/image_two"
+            app:layout_constraintRight_toRightOf="@id/image_tree"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintTop_toTopOf="@id/background_ic_camera_two"
+            app:layout_constraintBottom_toBottomOf="@id/background_ic_camera_two"
+            app:layout_constraintRight_toRightOf="@id/background_ic_camera_two"
+            app:layout_constraintLeft_toLeftOf="@id/background_ic_camera_two"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_tree"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_two"
+            />
+
+        <View
+            android:id="@+id/background_ic_camera_tree"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/background_ic_camera"
+            app:layout_constraintBottom_toBottomOf="@id/image_tree"
+            app:layout_constraintRight_toRightOf="@id/image_tree"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintTop_toTopOf="@id/background_ic_camera_tree"
+            app:layout_constraintBottom_toBottomOf="@id/background_ic_camera_tree"
+            app:layout_constraintRight_toRightOf="@id/background_ic_camera_tree"
+            app:layout_constraintLeft_toLeftOf="@id/background_ic_camera_tree"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_cadastrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/buttom_save"
+            android:fontFamily="@font/montserrat_semibold"
+            android:padding="15dp"
+            android:textSize="18sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/background_button_cadastrar"
+            app:layout_constraintTop_toBottomOf="@id/background_ic_camera_tree"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

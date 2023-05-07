@@ -80,9 +80,23 @@
     <string name="button_edit_phone">Alterar telefone</string>
     <string name="button_update">Salvar alterações</string>
 
+    //settings screen strings
+    <string name="edit_data">Editar dados</string>
+    <string name="notifications">Notificações</string>
+    <string name="delete_account">Excluir conta</string>
+
     //notifications screen strings
     <string name="tittle_notifi">Notificações</string>
     <string name="notifi_null">Sem notificações</string>
+
+    //edit_apartament screen strings
+    <string name="add_energy">Adicionar conta de energia</string>
+    <string name="add_water">Adicionar conta de água</string>
+    <string name="add_number">Adicionar número da casa</string>
+    <string name="add_image">Adiconar imagem</string>
+    <string name="change_image">Alterar imagem</string>
+    <string name="change_value">Alterar valor da propriedade</string>
+    <string name="tittle_edit_apartament">Atualizar</string>
 
     //Dialog_image
     <string name="select_options">Selecione uma opção</string>
@@ -94,5 +108,16 @@
     <string name="user_email">Email</string>
     //Dialog_update_phone
     <string name="user_phone">Telefone</string>
+    //Dialog_update_number
+    <string name="number_update">Número</string>
+    //Dialog_update_water
+    <string name="water_update">Número da matricula</string>
+    //Dialog_update_energy
+    <string name="energy_update">Número da conta</string>
+    //Dialog_update_value
+    <string name="value_update">Valor</string>
+
+    //add_image screen string
+    <string name="buttom_save">Salvar</string>
 
 </resources>

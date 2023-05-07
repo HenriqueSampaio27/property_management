@@ -1,13 +1,22 @@
 package com.henriqueapps.administraoDeApartamentos.pages
 
+import android.content.ContentValues.TAG
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.denzcoskun.imageslider.models.SlideModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityDetailBinding
 
@@ -16,6 +25,7 @@ class Detail : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val slidesList : MutableList<SlideModel> = mutableListOf()
     private var stateInfoProperty : Boolean = false
+    private lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +116,52 @@ class Detail : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.menu_edit) {
+            val intent = Intent(this, EditApartament::class.java)
+            startActivity(intent)
+        }
+        if (id == R.id.menu_payment){
 
+        }
+        if (id == R.id.menu_rent){
+
+        }
+        if (id == R.id.menu_delete){
+            dialogDelete()
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun dialogDelete() {
+        val delete = AlertDialog.Builder(this)
+            .setTitle("Confirmação")
+            .setMessage("Deseja excluir sua propriedade?")
+            .setPositiveButton("Sim",
+                DialogInterface.OnClickListener { dialogInterface, id ->
+                    deleteProperty()
+                })
+            .setNegativeButton("Não",
+                DialogInterface.OnClickListener { dialogInterface, id ->
+                    dialog.dismiss()
+                })
+
+        dialog = delete.create()
+        dialog.show()
+
+    }
+
+    private fun deleteProperty(){
+        val db = FirebaseFirestore.getInstance()
+        val user = FirebaseAuth.getInstance().currentUser
+        val document = "bfeerv"
+
+        db.collection("Properties").document(document)
+            .delete().addOnSuccessListener {
+                Toast.makeText(this, "Propriedade excluida com sucesso!", Toast.LENGTH_SHORT).show()
+                finish()
+            }.addOnFailureListener {
+                Log.d(TAG, it.toString())
+            }
     }
 }
