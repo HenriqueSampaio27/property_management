@@ -15,7 +15,6 @@ import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityEditApartamentBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogEnergyUpdateBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogNumberUpdateBinding
-import com.henriqueapps.administraoDeApartamentos.databinding.DialogUpdateEmailBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogUpdateValueBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogWaterUpdateBinding
 
@@ -56,7 +55,7 @@ class EditApartament : AppCompatActivity() {
             dialogUpdateWater(it)
         }
 
-        binding.addNumber.setOnClickListener {
+        binding.addEnergy.setOnClickListener {
             dialogUpdateEnergy(it)
         }
 
@@ -77,7 +76,6 @@ class EditApartament : AppCompatActivity() {
         var energy = ""
         var water = ""
 
-        //val documentId = "308d7b6a-d56b-47cc-9c60-c39963c30b57"
         db.collection("Properties").document(documentId!!)
             .get().addOnSuccessListener {   document ->
                 number = document.data!!["number"].toString()
@@ -129,7 +127,7 @@ class EditApartament : AppCompatActivity() {
             .setView(inflater.inflate(R.layout.dialog_update_value, null))
             .setPositiveButton("Atualizar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
-                    updateValue = DialogUpdateValueBinding.inflate(layoutInflater).updateValue.text.toString()
+                    updateValue = DialogUpdateValueBinding.inflate(layoutInflater).updateValue.getNumericValue().toString()
                     db.collection("Properties").document(documentId)
                         .update(
                             mapOf(

@@ -2,6 +2,7 @@ package com.henriqueapps.administraoDeApartamentos.pages
 
 import android.Manifest
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,11 +19,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityAddImageBinding
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.HashMap
 import java.util.UUID
 
@@ -33,13 +35,14 @@ class AddImage : AppCompatActivity() {
     private lateinit var dialog: AlertDialog
     private lateinit var dialogTwo: AlertDialog
     private val REQUEST_IMAGE_CAPTURE = 1
-    private lateinit var byteOne: ByteArray
-    private lateinit var byteTwo: ByteArray
-    private lateinit var byteTree: ByteArray
 
-    private lateinit var uriImageOne: Uri
-    private lateinit var uriImageTwo: Uri
-    private lateinit var uriImageTree: Uri
+    private var uriOne: Uri = Uri.EMPTY
+    private var uriTwo: Uri = Uri.EMPTY
+    private var uriTree: Uri = Uri.EMPTY
+
+    private var uriImageOne: String = ""
+    private var uriImageTwo: String = ""
+    private var uriImageTree: String = ""
 
     private var imageOne : Boolean = true
     private var imageTwo : Boolean = true
@@ -54,6 +57,7 @@ class AddImage : AppCompatActivity() {
         binding = ActivityAddImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar!!.hide()
         retrieveImages()
 
         binding.backgroundIcCameraOne.setOnClickListener {
@@ -89,18 +93,18 @@ class AddImage : AppCompatActivity() {
 
         db.collection("Properties").document(documentId!!)
             .get().addOnSuccessListener { document ->
-                uriImageOne = document.data!!["imageOne"].toString().toUri()
-                uriImageTwo = document.data!!["imageTwo"].toString().toUri()
-                uriImageTree = document.data!!["imageTree"].toString().toUri()
+                uriImageOne = document.data!!["imageOne"].toString()
+                uriImageTwo = document.data!!["imageTwo"].toString()
+                uriImageTree = document.data!!["imageTree"].toString()
 
-                if (uriImageOne.toString().isNotEmpty()){
-                    binding.imageOne.setImageURI(uriImageOne)
+                if (uriImageOne.isNotEmpty()){
+                    Glide.with(applicationContext).load(uriImageOne).into(binding.imageOne)
                 }
-                if (uriImageTwo.toString().isNotEmpty()){
-                    binding.imageTwo.setImageURI(uriImageTwo)
+                if (uriImageTwo.isNotEmpty()){
+                    Glide.with(applicationContext).load(uriImageTwo).into(binding.imageTwo)
                 }
-                if (uriImageTree.toString().isNotEmpty()){
-                    binding.imageTree.setImageURI(uriImageTree)
+                if (uriImageTree.isNotEmpty()){
+                    Glide.with(applicationContext).load(uriImageTree).into(binding.imageTree)
                 }
 
             }.addOnFailureListener {
@@ -121,30 +125,43 @@ class AddImage : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val documentId = intent.getStringExtra("documentId")
 
-        if(byteOne.toString().isNotEmpty() && byteTwo.toString().isNotEmpty() && byteTree.toString()
+        if(uriOne.toString().isNotEmpty() && uriTwo.toString().isNotEmpty() && uriTree.toString()
                 .isNotEmpty()){
-            referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                referenceTwo.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
-                    referenceTree.putBytes(byteTree).addOnSuccessListener { byteFirestoreTree ->
-                        val imageByteOne = byteFirestoreOne.toString()
-                        val imageByteTwo = byteFirestoreTwo.toString()
-                        val imageByteTree = byteFirestoreTree.toString()
-                        val apartament: MutableMap<String, String> = HashMap()
+            referenceOne.putFile(uriOne).addOnSuccessListener {
+                referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                    referenceTwo.putFile(uriTwo).addOnSuccessListener {
+                        referenceTwo.downloadUrl.addOnSuccessListener { uriFirestoreTwo ->
+                            referenceTree.putFile(uriTree).addOnSuccessListener {
+                                referenceTree.downloadUrl.addOnSuccessListener { uriFirestoreTree ->
+                                    val imageUriOne = uriFirestoreOne.toString()
+                                    val imageUriTwo = uriFirestoreTwo.toString()
+                                    val imageUriTree = uriFirestoreTree.toString()
+                                    val apartament: MutableMap<String, String> = HashMap()
 
-                        apartament["imageOne"] = imageByteOne
-                        apartament["imageTwo"] = imageByteTwo
-                        apartament["imageTree"] = imageByteTree
+                                    apartament["imageOne"] = imageUriOne
+                                    apartament["imageTwo"] = imageUriTwo
+                                    apartament["imageTree"] = imageUriTree
 
-                        db.collection("Properties").document(documentId!!)
-                            .update(apartament as Map<String, Any>).addOnSuccessListener {
+                                    db.collection("Properties").document(documentId!!)
+                                        .update(apartament as Map<String, Any>)
+                                        .addOnSuccessListener {
 
-                                Toast.makeText(
-                                this,
-                                "Imagens atualizadas com sucesso!",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                            finish()
+                                            Toast.makeText(
+                                                this,
+                                                "Imagens atualizadas com sucesso!",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            finish()
+                                        }.addOnFailureListener {
+                                            Log.d(TAG, it.toString())
+                                        }
+                                }.addOnFailureListener {
+                                    Log.d(TAG, it.toString())
+                                }
+                            }.addOnFailureListener {
+                                Log.d(TAG, it.toString())
+                            }
                         }.addOnFailureListener {
                             Log.d(TAG, it.toString())
                         }
@@ -157,17 +174,134 @@ class AddImage : AppCompatActivity() {
             }.addOnFailureListener{
                 Log.d(TAG, it.toString())
             }
-        }else if (byteOne.toString().isNotEmpty() && byteTwo.toString().isNotEmpty()){
-            referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                referenceTwo.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
-                    val imageByteOne = byteFirestoreOne.toString()
-                    val imageByteTwo = byteFirestoreTwo.toString()
-                    val imageByteTree = uriImageTree.toString()
+        }else if (uriOne.toString().isNotEmpty() && uriTwo.toString().isNotEmpty()){
+            referenceOne.putFile(uriOne).addOnSuccessListener {
+                referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                    referenceTwo.putFile(uriTwo).addOnSuccessListener {
+                        referenceTwo.downloadUrl.addOnSuccessListener { uriFirestoreTwo ->
+                            val imageUriOne = uriFirestoreOne.toString()
+                            val imageUriTwo = uriFirestoreTwo.toString()
+                            val imageUriTree = uriImageTree
+                            val apartament: MutableMap<String, String> = HashMap()
+
+                            apartament["imageOne"] = imageUriOne
+                            apartament["imageTwo"] = imageUriTwo
+                            apartament["imageTree"] = imageUriTree
+
+                            db.collection("Properties").document(documentId!!)
+                                .update(apartament as Map<String, Any>).addOnSuccessListener {
+
+                                    Toast.makeText(
+                                        this,
+                                        "Imagens atualizadas com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    finish()
+                                }.addOnFailureListener {
+                                    Log.d(TAG, it.toString())
+                                }
+                        }.addOnFailureListener {
+                            Log.d(TAG, it.toString())
+                        }
+                    }.addOnFailureListener {
+                        Log.d(TAG, it.toString())
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, it.toString())
+                }
+            }.addOnFailureListener{
+                Log.d(TAG, it.toString())
+            }
+        }else if (uriOne.toString().isNotEmpty() && uriTree.toString().isNotEmpty()){
+            referenceOne.putFile(uriOne).addOnSuccessListener {
+                referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                    referenceTree.putFile(uriTree).addOnSuccessListener {
+                        referenceTree.downloadUrl.addOnSuccessListener { uriFirestoreTree ->
+                            val imageUriOne = uriFirestoreOne.toString()
+                            val imageUriTwo = uriImageTwo
+                            val imageUriTree = uriFirestoreTree.toString()
+                            val apartament: MutableMap<String, String> = HashMap()
+
+                            apartament["imageOne"] = imageUriOne
+                            apartament["imageTwo"] = imageUriTwo
+                            apartament["imageTree"] = imageUriTree
+
+                            db.collection("Properties").document(documentId!!)
+                                .update(apartament as Map<String, Any>).addOnSuccessListener {
+
+                                    Toast.makeText(
+                                        this,
+                                        "Imagens atualizadas com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    finish()
+                                }.addOnFailureListener {
+                                    Log.d(TAG, it.toString())
+                                }
+                        }.addOnFailureListener {
+                            Log.d(TAG, it.toString())
+                        }
+                    }.addOnFailureListener {
+                        Log.d(TAG, it.toString())
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, it.toString())
+                }
+            }.addOnFailureListener {
+                Log.d(TAG, it.toString())
+            }
+        }else if (uriTwo.toString().isNotEmpty() && uriTree.toString().isNotEmpty()){
+            referenceTwo.putFile(uriTwo).addOnSuccessListener {
+                referenceTwo.downloadUrl.addOnSuccessListener { uriFirestoreTwo ->
+                    referenceTree.putFile(uriTree).addOnSuccessListener {
+                        referenceTree.downloadUrl.addOnSuccessListener { uriFirestoreTree ->
+                            val imageUriOne = uriImageOne
+                            val imageUriTwo = uriFirestoreTwo.toString()
+                            val imageUriTree = uriFirestoreTree.toString()
+                            val apartament: MutableMap<String, String> = HashMap()
+
+                            apartament["imageOne"] = imageUriOne
+                            apartament["imageTwo"] = imageUriTwo
+                            apartament["imageTree"] = imageUriTree
+
+                            db.collection("Properties").document(documentId!!)
+                                .update(apartament as Map<String, Any>).addOnSuccessListener {
+
+                                    Toast.makeText(
+                                        this,
+                                        "Imagens atualizadas com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    finish()
+                                }.addOnFailureListener {
+                                    Log.d(TAG, it.toString())
+                                }
+                        }.addOnFailureListener {
+                            Log.d(TAG, it.toString())
+                        }
+                    }.addOnFailureListener {
+                        Log.d(TAG, it.toString())
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, it.toString())
+                }
+            }.addOnFailureListener{
+                Log.d(TAG, it.toString())
+            }
+        }else if(uriOne.toString().isNotEmpty()){
+            referenceOne.putFile(uriOne).addOnSuccessListener {
+                referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                    val imageUriOne = uriFirestoreOne.toString()
+                    val imageUriTwo = uriImageTwo
+                    val imageUriTree = uriImageTree
                     val apartament: MutableMap<String, String> = HashMap()
 
-                    apartament["imageOne"] = imageByteOne
-                    apartament["imageTwo"] = imageByteTwo
-                    apartament["imageTree"] = imageByteTree
+                    apartament["imageOne"] = imageUriOne
+                    apartament["imageTwo"] = imageUriTwo
+                    apartament["imageTree"] = imageUriTree
 
                     db.collection("Properties").document(documentId!!)
                         .update(apartament as Map<String, Any>).addOnSuccessListener {
@@ -187,49 +321,18 @@ class AddImage : AppCompatActivity() {
                 }
             }.addOnFailureListener{
                 Log.d(TAG, it.toString())
-                }
-        }else if (byteOne.toString().isNotEmpty() && byteTree.toString().isNotEmpty()){
-            referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                referenceTwo.putBytes(byteTree).addOnSuccessListener { byteFirestoreTree ->
-                    val imageByteOne = byteFirestoreOne.toString()
-                    val imageByteTwo = uriImageTwo.toString()
-                    val imageByteTree = byteFirestoreTree.toString()
-                    val apartament: MutableMap<String, String> = HashMap()
-
-                    apartament["imageOne"] = imageByteOne
-                    apartament["imageTwo"] = imageByteTwo
-                    apartament["imageTree"] = imageByteTree
-
-                    db.collection("Properties").document(documentId!!)
-                        .update(apartament as Map<String, Any>).addOnSuccessListener {
-
-                        Toast.makeText(
-                            this,
-                            "Imagens atualizadas com sucesso!",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        finish()
-                    }.addOnFailureListener {
-                            Log.d(TAG, it.toString())
-                    }
-                }.addOnFailureListener {
-                    Log.d(TAG, it.toString())
-                }
-            }.addOnFailureListener{
-                Log.d(TAG, it.toString())
             }
-        }else if (byteTwo.toString().isNotEmpty() && byteTree.toString().isNotEmpty()){
-            referenceOne.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
-                referenceTwo.putBytes(byteTree).addOnSuccessListener { byteFirestoreTree ->
-                    val imageByteOne = uriImageOne.toString()
-                    val imageByteTwo = byteFirestoreTwo.toString()
-                    val imageByteTree = byteFirestoreTree.toString()
+        }else if(uriTwo.toString().isNotEmpty()){
+            referenceTwo.putFile(uriTwo).addOnSuccessListener {
+                referenceTwo.downloadUrl.addOnSuccessListener { uriFirestoreTwo ->
+                    val imageUriOne = uriImageOne
+                    val imageUriTwo = uriFirestoreTwo.toString()
+                    val imageUriTree = uriImageTree
                     val apartament: MutableMap<String, String> = HashMap()
 
-                    apartament["imageOne"] = imageByteOne
-                    apartament["imageTwo"] = imageByteTwo
-                    apartament["imageTree"] = imageByteTree
+                    apartament["imageOne"] = imageUriOne
+                    apartament["imageTwo"] = imageUriTwo
+                    apartament["imageTree"] = imageUriTree
 
                     db.collection("Properties").document(documentId!!)
                         .update(apartament as Map<String, Any>).addOnSuccessListener {
@@ -250,84 +353,34 @@ class AddImage : AppCompatActivity() {
             }.addOnFailureListener{
                 Log.d(TAG, it.toString())
             }
-        }else if(byteOne.toString().isNotEmpty()){
-            referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                val imageByteOne = byteFirestoreOne.toString()
-                val imageByteTwo = ""
-                val imageByteTree = ""
-                val apartament: MutableMap<String, String> = HashMap()
+        }else if(uriTree.toString().isNotEmpty()){
+            referenceTree.putFile(uriTree).addOnSuccessListener {
+                referenceTree.downloadUrl.addOnSuccessListener { uriFirestoreTree ->
+                    val imageUriOne = uriImageOne
+                    val imageUriTwo = uriImageTwo
+                    val imageUriTree = uriFirestoreTree.toString()
+                    val apartament: MutableMap<String, String> = HashMap()
 
-                apartament["imageOne"] = imageByteOne
-                apartament["imageTwo"] = imageByteTwo
-                apartament["imageTree"] = imageByteTree
+                    apartament["imageOne"] = imageUriOne
+                    apartament["imageTwo"] = imageUriTwo
+                    apartament["imageTree"] = imageUriTree
 
-                db.collection("Properties").document(documentId!!)
-                    .update(apartament as Map<String, Any>).addOnSuccessListener {
+                    db.collection("Properties").document(documentId!!)
+                        .update(apartament as Map<String, Any>).addOnSuccessListener {
 
-                        Toast.makeText(
-                            this,
-                            "Imagens atualizadas com sucesso!",
-                            Toast.LENGTH_SHORT
+                            Toast.makeText(
+                                this,
+                                "Imagens atualizadas com sucesso!",
+                                Toast.LENGTH_SHORT
                             )
-                            .show()
-                        finish()
-                    }.addOnFailureListener {
-                        Log.d(TAG, it.toString())
-                    }
-            }.addOnFailureListener{
-                Log.d(TAG, it.toString())
-            }
-        }else if(byteTwo.toString().isNotEmpty()){
-            referenceOne.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
-                val imageByteOne = uriImageOne.toString()
-                val imageByteTwo = byteFirestoreTwo.toString()
-                val imageByteTree = uriImageTree.toString()
-                val apartament: MutableMap<String, String> = HashMap()
-
-                apartament["imageOne"] = imageByteOne
-                apartament["imageTwo"] = imageByteTwo
-                apartament["imageTree"] = imageByteTree
-
-                db.collection("Properties").document(documentId!!)
-                    .update(apartament as Map<String, Any>).addOnSuccessListener {
-
-                        Toast.makeText(
-                            this,
-                            "Imagens atualizadas com sucesso!",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        finish()
-                    }.addOnFailureListener {
-                        Log.d(TAG, it.toString())
-                    }
-            }.addOnFailureListener{
-                Log.d(TAG, it.toString())
-            }
-        }else if(byteTree.toString().isNotEmpty()){
-            referenceOne.putBytes(byteTree).addOnSuccessListener { byteFirestoreTree ->
-                val imageByteOne = uriImageOne.toString()
-                val imageByteTwo = uriImageTwo.toString()
-                val imageByteTree = byteFirestoreTree.toString()
-                val apartament: MutableMap<String, String> = HashMap()
-
-                apartament["imageOne"] = imageByteOne
-                apartament["imageTwo"] = imageByteTwo
-                apartament["imageTree"] = imageByteTree
-
-                db.collection("Properties").document(documentId!!)
-                    .update(apartament as Map<String, Any>).addOnSuccessListener {
-
-                        Toast.makeText(
-                            this,
-                            "Imagens atualizadas com sucesso!",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        finish()
-                    }.addOnFailureListener {
-                        Log.d(TAG, it.toString())
-                    }
+                                .show()
+                            finish()
+                        }.addOnFailureListener {
+                            Log.d(TAG, it.toString())
+                        }
+                }.addOnFailureListener {
+                    Log.d(TAG, it.toString())
+                }
             }.addOnFailureListener{
                 Log.d(TAG, it.toString())
             }
@@ -363,14 +416,18 @@ class AddImage : AppCompatActivity() {
                 }
                 val baos = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
+                val uri = getImageUri(applicationContext, bitmap)
+                val file = File(getRealPathFromUri(uri))
+
                 if (imageOne) {
-                    byteOne = baos.toByteArray()
+                    uriOne = uri!!
                     binding.imageOne.setImageBitmap(bitmap)
                 } else if (imageTwo) {
-                    byteTwo = baos.toByteArray()
+                    uriTwo = uri!!
                     binding.imageTwo.setImageBitmap(bitmap)
                 } else if (imageTree) {
-                    byteTree = baos.toByteArray()
+                    uriTree = uri!!
                     binding.imageTree.setImageBitmap(bitmap)
                 }
             }
@@ -451,16 +508,43 @@ class AddImage : AppCompatActivity() {
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 
+            val uri = getImageUri(applicationContext, imageBitmap)
+            val file = File(getRealPathFromUri(uri))
+
             if (imageOne) {
-                byteOne = baos.toByteArray()
+                uriOne = uri!!
                 binding.imageOne.setImageBitmap(imageBitmap)
             } else if (imageTwo) {
-                byteTwo = baos.toByteArray()
+                uriTwo = uri!!
                 binding.imageTwo.setImageBitmap(imageBitmap)
             } else if (imageTree) {
-                byteTree = baos.toByteArray()
+                uriTree = uri!!
                 binding.imageTree.setImageBitmap(imageBitmap)
             }
         }
     }
+
+    private fun getRealPathFromUri(uri: Uri?): String {
+        var path = ""
+        if (contentResolver != null){
+            val cursor = contentResolver.query(uri!!, null, null, null, null)
+            if (cursor != null){
+                cursor.moveToFirst()
+                val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                path = cursor.getString(idx)
+                cursor.close()
+            }
+        }
+        return path
+    }
+
+    private fun getImageUri(applicationContext: Context?, imageBitmap: Bitmap): Uri? {
+        val title = UUID.randomUUID().toString()
+        val bytes = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val paths = MediaStore.Images.Media.insertImage(applicationContext!!.contentResolver, imageBitmap, title, null)
+        return Uri.parse(paths)
+
+    }
+
 }

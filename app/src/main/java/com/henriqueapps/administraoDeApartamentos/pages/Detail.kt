@@ -27,6 +27,8 @@ class Detail : AppCompatActivity() {
     private val slidesList : MutableList<SlideModel> = mutableListOf()
     private var stateInfoProperty : Boolean = false
     private lateinit var dialog: AlertDialog
+    private lateinit var energy: String
+    private lateinit var water : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +50,11 @@ class Detail : AppCompatActivity() {
             visibleInfoProperty()
         }
 
+    }
 
+    override fun onStart() {
+        super.onStart()
+        getDocuments()
     }
 
     @SuppressLint("SetTextI18n")
@@ -58,55 +64,42 @@ class Detail : AppCompatActivity() {
 
         db.collection("Properties").document(documentId!!)
             .get().addOnSuccessListener {   document ->
-                val imageOne = document.data?.get("imageOne")
-                val imageTwo = document.data?.get("imageTwo")
-                val imageTree = document.data?.get("imageTree")
-                val type = document.data?.get("type")
-                val cep = document.data?.get("cep")
-                val logradouro = document.data?.get("logradouro")
-                val district = document.data?.get("district")
-                val state = document.data?.get("state")
-                val city = document.data?.get("city")
-                val water = document.data?.get("water")
-                val energy = document.data?.get("energy")
-                val price = document.data?.get("price")
-                val number = document.data?.get("number")
+                val imageOne = document.data?.get("imageOne").toString()
+                val imageTwo = document.data?.get("imageTwo").toString()
+                val imageTree = document.data?.get("imageTree").toString()
+                val type = document.data?.get("type").toString()
+                val cep = document.data?.get("cep").toString()
+                val logradouro = document.data?.get("logradouro").toString()
+                val district = document.data?.get("district").toString()
+                val state = document.data?.get("state").toString()
+                val city = document.data?.get("city").toString()
+                water = document.data?.get("water").toString()
+                energy = document.data?.get("energy").toString()
+                val price = document.data?.get("price").toString()
+                val number = document.data?.get("number").toString()
 
-                if (imageOne.toString().isNotEmpty()){
-                    val image_one = SlideModel(imageOne.toString())
+
+                if (imageOne.isNotEmpty()){
+                    val image_one = SlideModel(imageOne)
                     slidesList.add(image_one)
                 }
-                if (imageTwo.toString().isNotEmpty()){
-                    val image_two = SlideModel(imageTwo.toString())
+                if (imageTwo.isNotEmpty()){
+                    val image_two = SlideModel(imageTwo)
                     slidesList.add(image_two)
                 }
-                if (imageTree.toString().isNotEmpty()){
-                    val image_tree = SlideModel(imageTree.toString())
+                if (imageTree.isNotEmpty()){
+                    val image_tree = SlideModel(imageTree)
                     slidesList.add(image_tree)
                 }
-
                 binding.viewSlider.setImageList(slidesList)
-                binding.txtType.text = type.toString()
-                binding.txtPrice.text = price.toString()
-                binding.localization.text = "${logradouro.toString()} N°${number.toString()}, ${district.toString()}, " +
-                        "${city.toString()}-${state.toString()}, ${cep.toString()}"
-                binding.txtEnergy.text = energy.toString()
-                binding.water.text = water.toString()
+                binding.txtType.text = type
+                binding.txtPrice.text = price
+                binding.localization.text = "${logradouro} N°${number}, ${district}, ${city}-${state}, ${cep}"
+                binding.txtEnergy.text = energy
+                binding.water.text = water
 
             }
     }
-
-//    private fun getImage(){
-//        val image1 = SlideModel(R.drawable.logo)
-//        val image2 = SlideModel(R.drawable.avatar)
-//        val image3 = SlideModel(R.drawable.ic_apartment)
-//        slidesList.add(image1)
-//        slidesList.add(image2)
-//        slidesList.add(image3)
-//
-//        val imageSlider = binding.viewSlider
-//        imageSlider.setImageList(slidesList)
-//    }
 
     private fun visibleInfoProperty(){
         when{
@@ -114,14 +107,20 @@ class Detail : AppCompatActivity() {
                 binding.imageInfoProperty.setImageResource(R.drawable.ic_down)
                 binding.viewLine2.isVisible = false
                 binding.viewLocalization.isVisible = true
-                binding.viewInfoAdd.isVisible = true
                 binding.viewLine3.isVisible = true
                 binding.titleLocalization.isVisible = true
                 binding.localization.isVisible = true
-                binding.titleEnergy.isVisible = true
-                binding.txtEnergy.isVisible = true
-                binding.titleWater.isVisible = true
-                binding.water.isVisible = true
+                if(water.isNotEmpty()){
+                    binding.viewInfoAdd.isVisible = true
+                    binding.titleWater.isVisible = true
+                    binding.water.isVisible = true
+                }
+                if (energy.isNotEmpty()){
+                    binding.viewInfoAdd.isVisible = true
+                    binding.titleEnergy.isVisible = true
+                    binding.txtEnergy.isVisible = true
+                }
+
             }
             !stateInfoProperty -> {
                 binding.imageInfoProperty.setImageResource(R.drawable.ic_next)
