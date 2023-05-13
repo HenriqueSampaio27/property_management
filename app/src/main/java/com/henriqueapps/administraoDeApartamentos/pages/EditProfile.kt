@@ -19,20 +19,15 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.henriqueapps.administraoDeApartamentos.HomeActivity
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityEditProfileBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogConfirmBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogUpdateEmailBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogUpdatePhoneBinding
-import com.henriqueapps.administraoDeApartamentos.ui.settings.SettingsFragment
 import java.io.ByteArrayOutputStream
-import java.util.HashMap
 import java.util.UUID
 
 class EditProfile : AppCompatActivity() {
@@ -44,7 +39,7 @@ class EditProfile : AppCompatActivity() {
     private var updateEmail = ""
     private var updatePhone = ""
     private var updatePassword = ""
-    private var usuarioId : String = ""
+    private var userId : String = ""
     private val REQUEST_IMAGE_CAPTURE = 1
 
     companion object{
@@ -310,10 +305,10 @@ class EditProfile : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val db = FirebaseFirestore.getInstance()
-        usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
+        userId = FirebaseAuth.getInstance().currentUser!!.uid
         val emailID = FirebaseAuth.getInstance().currentUser!!.email
 
-        val documentReference = db.collection("Usuarios").document(usuarioId)
+        val documentReference = db.collection("Usuarios").document(userId)
         documentReference.addSnapshotListener { value, error ->
             if (value != null) {
                 //Glide.with(applicationContext).load(value.getString("image")).into(findViewById(R.id.imageAvatar))

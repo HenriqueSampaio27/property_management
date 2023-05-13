@@ -2,6 +2,7 @@ package com.henriqueapps.administraoDeApartamentos.pages
 
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -64,7 +65,9 @@ class EditApartament : AppCompatActivity() {
         }
 
         binding.changeImage.setOnClickListener {
-
+            val intent = Intent(this, AddImage::class.java)
+            intent.putExtra("documentId", documentId)
+            startActivity(intent)
         }
 
     }

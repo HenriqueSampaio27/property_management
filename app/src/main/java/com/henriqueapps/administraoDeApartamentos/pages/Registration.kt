@@ -1,6 +1,7 @@
 package com.henriqueapps.administraoDeApartamentos.pages
 
 import android.Manifest
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,7 +19,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRegistrationBinding
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 
 class Registration : AppCompatActivity() {
@@ -36,6 +37,7 @@ class Registration : AppCompatActivity() {
     private var byte: ByteArray = "".toByteArray()
     private lateinit var usuarioId : String
     private val REQUEST_IMAGE_CAPTURE = 1
+    private var uri : Uri = Uri.EMPTY
 
     companion object{
         private val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -59,7 +61,9 @@ class Registration : AppCompatActivity() {
             }
             val baos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            byte = baos.toByteArray()
+            uri = getImageUri(applicationContext, bitmap)!!
+            val file = File(getRealPathFromUri(uri))
+
             binding.userAvatar.setImageBitmap(bitmap)
         }
     }
@@ -109,12 +113,8 @@ class Registration : AppCompatActivity() {
                 lastName.isEmpty() -> {
                     binding.editLastName.error = "Preencha o Sobrenome!"
                 }
-                isDone -> {
-                    Toast.makeText(this, "Preencha um telefone válido!", Toast.LENGTH_SHORT).show()
-                }
                 else -> {
                     register(email, password, name, lastName, phone)
-
                 }
             }
         }
@@ -178,15 +178,15 @@ class Registration : AppCompatActivity() {
                 Log.i("Registration", it.toString())
             }
         }else{
-            reference.putBytes(byte).addOnSuccessListener {
-                reference.downloadUrl.addOnSuccessListener {    byteFirestore ->
-                    var byteImage = byteFirestore.toString()
+            reference.putFile(uri).addOnSuccessListener {
+                reference.downloadUrl.addOnSuccessListener {    uriFirestore ->
+                    var uriImage = uriFirestore.toString()
                     val db = FirebaseFirestore.getInstance()
                     val usuarios: MutableMap<String, String> = HashMap()
                     usuarios["name"] = name
                     usuarios["lastName"] = lastName
                     usuarios["phone"] = phone
-                    usuarios["image"] = byteImage
+                    usuarios["image"] = uriImage
 
                     usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
                     val documentReference = db.collection("Usuarios").document(usuarioId)
@@ -269,19 +269,42 @@ class Registration : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun getRealPathFromUri(uri: Uri?): String {
+        var path = ""
+        if (contentResolver != null){
+            val cursor = contentResolver.query(uri!!, null, null, null, null)
+            if (cursor != null){
+                cursor.moveToFirst()
+                val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                path = cursor.getString(idx)
+                cursor.close()
+            }
+        }
+        return path
+    }
+
+    private fun getImageUri(applicationContext: Context?, imageBitmap: Bitmap): Uri? {
+        val title = UUID.randomUUID().toString()
+        val bytes = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val paths = MediaStore.Images.Media.insertImage(applicationContext!!.contentResolver, imageBitmap, title, null)
+        return Uri.parse(paths)
+
+    }
+
     private fun pictureVerificationPermission(){
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             binding.userAvatar.setImageBitmap(imageBitmap)
-            val baos = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            byte = baos.toByteArray()
+            uri = getImageUri(applicationContext, imageBitmap)!!
+            val file = File(getRealPathFromUri(uri))
         }
     }
 }

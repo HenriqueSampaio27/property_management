@@ -103,7 +103,7 @@ class SettingsFragment : Fragment() {
                     .addOnSuccessListener {
                         db.collection("Usuarios").document(userUid)
                             .delete().addOnSuccessListener {
-                                db.collection("Properties").whereEqualTo("usuario", userUid)
+                                db.collection("Properties").whereEqualTo("owner", userUid)
                                     .get().addOnSuccessListener { documents ->
                                         for (document in documents) {
                                             db.collection("Properties")

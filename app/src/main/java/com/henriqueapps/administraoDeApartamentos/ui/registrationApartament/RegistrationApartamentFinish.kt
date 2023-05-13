@@ -1,6 +1,9 @@
 package com.henriqueapps.administraoDeApartamentos.ui.registrationApartament
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +13,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.MediaStore.Images
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
@@ -25,6 +29,7 @@ import com.henriqueapps.administraoDeApartamentos.HomeActivity
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRegistrationApartamentFinishBinding
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 
 
@@ -36,9 +41,9 @@ class RegistrationApartamentFinish : AppCompatActivity() {
     private lateinit var dialog: AlertDialog
     private lateinit var dialogTwo: AlertDialog
     private val REQUEST_IMAGE_CAPTURE = 1
-    private var byteOne: ByteArray = "".toByteArray()
-    private var byteTwo: ByteArray = "".toByteArray()
-    private var byteTree: ByteArray = "".toByteArray()
+    private var uriOne: Uri = Uri.EMPTY
+    private var uriTwo: Uri = Uri.EMPTY
+    private var uriTree: Uri = Uri.EMPTY
 
     companion object {
         private val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -58,27 +63,32 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("SetTextI18n", "ObsoleteSdkInt")
     private val galleryResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.data?.data != null) {
                 val bitmap: Bitmap = if(Build.VERSION.SDK_INT < 28){
-                    MediaStore.Images.Media.getBitmap(baseContext.contentResolver, result.data?.data)
+                    Images.Media.getBitmap(baseContext.contentResolver, result.data?.data)
                 }else{
                     val source = ImageDecoder.createSource(this.contentResolver, result.data?.data!!)
                     ImageDecoder.decodeBitmap(source)
                 }
                 val baos = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                if (byteOne.toString().isEmpty()) {
-                    byteOne = baos.toByteArray()
+
+                val uri = getImageUri(applicationContext, bitmap)
+                val file = File(getRealPathFromUri(uri))
+
+                if (uriOne.toString().isEmpty()) {
+                    uriOne = uri!!
                     binding.txtImage1.text = "Imagem carregada!"
                     binding.iconImage1.setImageResource(R.drawable.ic_clear)
-                } else if (byteTwo.toString().isEmpty()) {
-                    byteTwo = baos.toByteArray()
+                } else if (uriTwo.toString().isEmpty()) {
+                    uriTwo = uri!!
                     binding.txtImage2.text = "Imagem carregada!"
                     binding.iconImage2.setImageResource(R.drawable.ic_clear)
-                } else if (byteTree.toString().isEmpty()) {
-                    byteTree = baos.toByteArray()
+                } else if (uriTree.toString().isEmpty()) {
+                    uriTree = uri!!
                     binding.txtImage3.text = "Imagem carregada!"
                     binding.iconImage3.setImageResource(R.drawable.ic_clear)
                 }
@@ -102,7 +112,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         binding.iconImage1.setOnClickListener {
             if (binding.txtImage1.text == "Imagem carregada!") {
                 binding.txtImage1.text = "Fazer upload da imagem"
-                byteOne = "".toByteArray()
+                uriOne = Uri.EMPTY
                 binding.iconImage1.setImageResource(R.drawable.ic_upload)
             } else {
                 DialogImageGallery()
@@ -112,7 +122,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         binding.iconImage2.setOnClickListener {
             if (binding.txtImage2.text == "Imagem carregada!") {
                 binding.txtImage2.text = "Fazer upload da imagem"
-                byteTwo = "".toByteArray()
+                uriTwo = Uri.EMPTY
                 binding.iconImage2.setImageResource(R.drawable.ic_upload)
             } else {
                 DialogImageGallery()
@@ -121,7 +131,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         binding.iconImage3.setOnClickListener {
             if (binding.txtImage3.text == "Imagem carregada!") {
                 binding.txtImage3.text = "Fazer upload da imagem"
-                byteTree = "".toByteArray()
+                uriTree = Uri.EMPTY
                 binding.iconImage3.setImageResource(R.drawable.ic_upload)
 
             } else {
@@ -184,7 +194,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
 
     private fun galleryPermissionVerification() {
         val galleryPermission =
-            permissionVerification(RegistrationApartamentFinish.GALLERY_PERMISSION)
+            permissionVerification(GALLERY_PERMISSION)
 
         when {
             galleryPermission -> {
@@ -196,9 +206,9 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                 )
             }
 
-            shouldShowRequestPermissionRationale(RegistrationApartamentFinish.GALLERY_PERMISSION) -> showDialogPermission()
+            shouldShowRequestPermissionRationale(GALLERY_PERMISSION) -> showDialogPermission()
 
-            else -> galleryRequest.launch(RegistrationApartamentFinish.GALLERY_PERMISSION)
+            else -> galleryRequest.launch(GALLERY_PERMISSION)
         }
     }
 
@@ -247,6 +257,8 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
     }
 
+    @SuppressLint("SetTextI18n")
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -254,20 +266,46 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 
-            if (byteOne.toString().isEmpty()) {
-                byteOne = baos.toByteArray()
+            val uri = getImageUri(applicationContext, imageBitmap)
+            val file = File(getRealPathFromUri(uri))
+
+            if (uriOne.toString().isEmpty()) {
+                uriOne = uri!!
                 binding.txtImage1.text = "Imagem carregada!"
                 binding.iconImage1.setImageResource(R.drawable.ic_clear)
-            } else if (byteTwo.toString().isEmpty()) {
-                byteTwo = baos.toByteArray()
+            } else if (uriTwo.toString().isEmpty()) {
+                uriTwo = uri!!
                 binding.txtImage2.text = "Imagem carregada!"
                 binding.iconImage2.setImageResource(R.drawable.ic_clear)
-            } else if (byteTree.toString().isEmpty()) {
-                byteTree = baos.toByteArray()
+            } else if (uriTree.toString().isEmpty()) {
+                uriTree = uri!!
                 binding.txtImage3.text = "Imagem carregada!"
                 binding.iconImage3.setImageResource(R.drawable.ic_clear)
             }
         }
+    }
+
+    private fun getRealPathFromUri(uri: Uri?): String {
+        var path = ""
+        if (contentResolver != null){
+            val cursor = contentResolver.query(uri!!, null, null, null, null)
+            if (cursor != null){
+                cursor.moveToFirst()
+                val idx = cursor.getColumnIndex(Images.ImageColumns.DATA)
+                path = cursor.getString(idx)
+                cursor.close()
+            }
+        }
+        return path
+    }
+
+    private fun getImageUri(applicationContext: Context?, imageBitmap: Bitmap): Uri? {
+        val title = UUID.randomUUID().toString()
+        val bytes = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val paths = Images.Media.insertImage(applicationContext!!.contentResolver, imageBitmap, title, null)
+        return Uri.parse(paths)
+
     }
 
     private fun propertyRegistration(){
@@ -283,7 +321,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         val type = type
 
         if(number.isEmpty()){
-            number = "Sem numero"
+            number = "Sem número"
         }
 
         if(!type.isEmpty()){
@@ -300,41 +338,106 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
 
             val intent = Intent(this, HomeActivity::class.java)
+            Log.i(TAG, uriOne.toString())
+            if(uriOne.toString().isNotEmpty() && uriTwo.toString().isNotEmpty() && uriTree.toString()
+                    .isNotEmpty()) {
+                referenceOne.putFile(uriOne).addOnSuccessListener {
+                    referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                        referenceTwo.putFile(uriTwo).addOnSuccessListener {
+                            referenceTwo.downloadUrl.addOnSuccessListener { uriFirestoreTwo ->
+                                referenceTree.putFile(uriTree).addOnSuccessListener {
+                                    referenceTree.downloadUrl.addOnSuccessListener { uriFirestoreTree ->
+                                        val imageUriOne = uriFirestoreOne.toString()
+                                        val imageUriTwo = uriFirestoreTwo.toString()
+                                        val imageUriTree = uriFirestoreTree.toString()
+                                        val apartament: MutableMap<String, String> = HashMap()
 
-            if(!byteOne.toString().isEmpty() && !byteTwo.toString().isEmpty() && !byteTree.toString().isEmpty()){
-                referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                    referenceTwo.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
-                        referenceTree.putBytes(byteTree).addOnSuccessListener { byteFirestoreTree ->
-                            val imageByteOne = byteFirestoreOne.toString()
-                            val imageByteTwo = byteFirestoreTwo.toString()
-                            val imageByteTree = byteFirestoreTree.toString()
-                            val apartament: MutableMap<String, String> = HashMap()
+                                        apartament["owner"] = usuarioId
+                                        apartament["cep"] = cep
+                                        apartament["logradouro"] = logradouro
+                                        apartament["number"] = number
+                                        apartament["district"] = district
+                                        apartament["city"] = city
+                                        apartament["state"] = state
+                                        apartament["water"] = water
+                                        apartament["energy"] = energy
+                                        apartament["price"] = price
+                                        apartament["type"] = type
+                                        apartament["imageOne"] = imageUriOne
+                                        apartament["imageTwo"] = imageUriTwo
+                                        apartament["imageTree"] = imageUriTree
 
-                            apartament["owner"] = usuarioId
-                            apartament["cep"] = cep
-                            apartament["logradouro"] = logradouro
-                            apartament["number"] = number
-                            apartament["district"] = district
-                            apartament["city"] = city
-                            apartament["state"] = state
-                            apartament["water"] = water
-                            apartament["energy"] = energy
-                            apartament["price"] = price
-                            apartament["type"] = type
-                            apartament["imageOne"] = imageByteOne
-                            apartament["imageTwo"] = imageByteTwo
-                            apartament["imageTree"] = imageByteTree
+                                        val documentReference =
+                                            db.collection("Properties").document(archiveUuid)
+                                        documentReference.set(apartament).addOnSuccessListener {
+                                            binding.progressCircular.isVisible = true
+                                            Toast.makeText(
+                                                this,
+                                                "Propriedade cadastrada com sucesso!",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            startActivity(intent)
+                                        }.addOnFailureListener {
+                                            Log.i("RegistrationApartamentFinish", it.toString())
+                                        }
+                                    }.addOnFailureListener {
+                                        Log.i("RegistrationApartamentFinish", it.toString())
+                                    }
+                                }.addOnFailureListener {
+                                    Log.i("RegistrationApartamentFinish", it.toString())
+                                }
+                            }.addOnFailureListener {
+                                Log.i("RegistrationApartamentFinish", it.toString())
+                            }
+                        }.addOnFailureListener {
+                            Log.i("RegistrationApartamentFinish", it.toString())
+                        }
+                    }.addOnFailureListener {
+                        Log.i("RegistrationApartamentFinish", it.toString())
+                    }
+                }.addOnFailureListener {
+                    Log.i("RegistrationApartamentFinish", it.toString())
+                }
+            }else if (uriOne.toString().isNotEmpty() && uriTwo.toString().isNotEmpty()){
+                referenceOne.putFile(uriOne).addOnSuccessListener {
+                    referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                        referenceTwo.putFile(uriTwo).addOnSuccessListener {
+                            referenceTwo.downloadUrl.addOnSuccessListener { uriFirestoreTwo ->
+                                val imageUriOne = uriFirestoreOne.toString()
+                                val imageUriTwo = uriFirestoreTwo.toString()
+                                val imageUriTree = ""
+                                val apartament: MutableMap<String, String> = HashMap()
 
-                            val documentReference = db.collection("Properties").document(archiveUuid)
-                            documentReference.set(apartament).addOnSuccessListener {
-                                binding.progressCircular.isVisible = true
-                                Toast.makeText(
-                                    this,
-                                    "Propriedade cadastrada com sucesso!",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                                startActivity(intent)
+                                apartament["usuario"] = usuarioId
+                                apartament["cep"] = cep
+                                apartament["logradouro"] = logradouro
+                                apartament["number"] = number
+                                apartament["district"] = district
+                                apartament["city"] = city
+                                apartament["state"] = state
+                                apartament["water"] = water
+                                apartament["energy"] = energy
+                                apartament["price"] = price
+                                apartament["type"] = type
+                                apartament["imageOne"] = imageUriOne
+                                apartament["imageTwo"] = imageUriTwo
+                                apartament["imageTree"] = imageUriTree
+
+                                val documentReference =
+                                    db.collection("Properties").document(archiveUuid)
+                                documentReference.set(apartament).addOnSuccessListener {
+                                    binding.progressCircular.isVisible = true
+                                    Toast.makeText(
+                                        this,
+                                        "Propriedade cadastrada com sucesso!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    startActivity(intent)
+                                }.addOnFailureListener {
+                                    Log.i("RegistrationApartamentFinish", it.toString())
+                                }
                             }.addOnFailureListener {
                                 Log.i("RegistrationApartamentFinish", it.toString())
                             }
@@ -347,12 +450,12 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                 }.addOnFailureListener{
                     Log.i("RegistrationApartamentFinish", it.toString())
                 }
-            }else if (!byteOne.toString().isEmpty() && !byteTwo.toString().isEmpty()){
-                referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                    referenceTwo.putBytes(byteTwo).addOnSuccessListener { byteFirestoreTwo ->
-                        val imageByteOne = byteFirestoreOne.toString()
-                        val imageByteTwo = byteFirestoreTwo.toString()
-                        val imageByteTree = ""
+            }else if(uriOne.toString().isNotEmpty()){
+                referenceOne.putFile(uriOne).addOnSuccessListener {
+                    referenceOne.downloadUrl.addOnSuccessListener { uriFirestoreOne ->
+                        val imageUriOne = uriFirestoreOne.toString()
+                        val imageUriTwo = ""
+                        val imageUriTree = ""
                         val apartament: MutableMap<String, String> = HashMap()
 
                         apartament["usuario"] = usuarioId
@@ -366,9 +469,9 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                         apartament["energy"] = energy
                         apartament["price"] = price
                         apartament["type"] = type
-                        apartament["imageOne"] = imageByteOne
-                        apartament["imageTwo"] = imageByteTwo
-                        apartament["imageTree"] = imageByteTree
+                        apartament["imageOne"] = imageUriOne
+                        apartament["imageTwo"] = imageUriTwo
+                        apartament["imageTree"] = imageUriTree
 
                         val documentReference = db.collection("Properties").document(archiveUuid)
                         documentReference.set(apartament).addOnSuccessListener {
@@ -389,48 +492,10 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                 }.addOnFailureListener{
                     Log.i("RegistrationApartamentFinish", it.toString())
                 }
-            }else if(!byteOne.toString().isEmpty()){
-                referenceOne.putBytes(byteOne).addOnSuccessListener { byteFirestoreOne ->
-                    val imageByteOne = byteFirestoreOne.toString()
-                    val imageByteTwo = ""
-                    val imageByteTree = ""
-                    val apartament: MutableMap<String, String> = HashMap()
-
-                    apartament["usuario"] = usuarioId
-                    apartament["cep"] = cep
-                    apartament["logradouro"] = logradouro
-                    apartament["number"] = number
-                    apartament["district"] = district
-                    apartament["city"] = city
-                    apartament["state"] = state
-                    apartament["water"] = water
-                    apartament["energy"] = energy
-                    apartament["price"] = price
-                    apartament["type"] = type
-                    apartament["imageOne"] = imageByteOne
-                    apartament["imageTwo"] = imageByteTwo
-                    apartament["imageTree"] = imageByteTree
-
-                    val documentReference = db.collection("Properties").document(archiveUuid)
-                    documentReference.set(apartament).addOnSuccessListener {
-                        binding.progressCircular.isVisible = true
-                        Toast.makeText(
-                            this,
-                            "Propriedade cadastrada com sucesso!",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        startActivity(intent)
-                    }.addOnFailureListener {
-                        Log.i("RegistrationApartamentFinish", it.toString())
-                    }
-                }.addOnFailureListener{
-                    Log.i("RegistrationApartamentFinish", it.toString())
-                }
             }else{
-                val imageByteOne = ""
-                val imageByteTwo = ""
-                val imageByteTree = ""
+                val imageUriOne = ""
+                val imageUriTwo = ""
+                val imageUriTree = ""
                 val apartament: MutableMap<String, String> = HashMap()
 
                 apartament["usuario"] = usuarioId
@@ -444,9 +509,9 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                 apartament["energy"] = energy
                 apartament["price"] = price
                 apartament["type"] = type
-                apartament["imageOne"] = imageByteOne
-                apartament["imageTwo"] = imageByteTwo
-                apartament["imageTree"] = imageByteTree
+                apartament["imageOne"] = imageUriOne
+                apartament["imageTwo"] = imageUriTwo
+                apartament["imageTree"] = imageUriTree
 
                 val documentReference = db.collection("Properties").document(archiveUuid)
                 documentReference.set(apartament).addOnSuccessListener {

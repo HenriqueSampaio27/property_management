@@ -1,13 +1,10 @@
 package com.henriqueapps.administraoDeApartamentos.pages
 
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityForgotPasswordBinding
 
 class ForgotPassword : AppCompatActivity() {

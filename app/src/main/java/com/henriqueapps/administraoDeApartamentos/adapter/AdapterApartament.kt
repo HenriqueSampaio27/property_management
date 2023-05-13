@@ -1,7 +1,9 @@
 package com.henriqueapps.administraoDeApartamentos.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,13 +20,15 @@ class AdapterApartament (private val context: Context, private val listApartamen
         return ApartamentViewHolder(itemList)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ApartamentViewHolder, position: Int) {
-        holder.address.text = "${listApartament[position].place}, ${listApartament[position].district}"
+        holder.address.text = "${listApartament[position].logradouro}, ${listApartament[position].district}"
         holder.price.text = listApartament[position].price
-        Glide.with(context).load(listApartament[position].image).into(holder.image)
+        Glide.with(context).asBitmap().load(listApartament[position].image).into(holder.image)
 
         holder.image.setOnClickListener {
             val intent = Intent(context, Detail::class.java)
+            intent.putExtra("documentId", listApartament[position].documentID)
             context.startActivity(intent)
         }
     }

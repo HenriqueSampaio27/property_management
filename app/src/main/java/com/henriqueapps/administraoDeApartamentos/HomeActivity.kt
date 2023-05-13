@@ -1,11 +1,14 @@
 package com.henriqueapps.administraoDeApartamentos
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Color
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-//import android.widget.TextView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -13,7 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-//import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -82,17 +85,17 @@ class HomeActivity : AppCompatActivity() {
         super.onStart()
         val db = FirebaseFirestore.getInstance()
         val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
-        //val emailID = FirebaseAuth.getInstance().currentUser!!.email
+        val emailID = FirebaseAuth.getInstance().currentUser!!.email
 
         val documentReference = db.collection("Usuarios").document(usuarioId)
         documentReference.addSnapshotListener { value, error ->
-            //if (value != null) {
-                //Glide.with(applicationContext).load(value.getString("image")).into(findViewById(R.id.imageAvatar))
-                //val name = findViewById<TextView>(R.id.nameUser)
-                //name.setText(value.getString("name"))
-                //val email = findViewById<TextView>(R.id.emailUser)
-                //email.setText(emailID)
-            //}
+            if (value != null) {
+                Glide.with(applicationContext).load(value.getString("image")).into(findViewById(R.id.imageAvatar))
+                val name = findViewById<TextView>(R.id.nameUser)
+                name.text = value.getString("name")
+                val email = findViewById<TextView>(R.id.emailUser)
+                email.text = emailID
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.henriqueapps.administraoDeApartamentos.pages
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.Intent
@@ -36,7 +37,7 @@ class Detail : AppCompatActivity() {
         title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        getImage()
+        getDocuments()
         visibleInfoRent()
         binding.txtInfo.setOnClickListener {
             stateInfoProperty = stateInfoProperty != true
@@ -50,17 +51,62 @@ class Detail : AppCompatActivity() {
 
     }
 
-    private fun getImage(){
-        val image1 = SlideModel(R.drawable.logo)
-        val image2 = SlideModel(R.drawable.avatar)
-        val image3 = SlideModel(R.drawable.ic_apartment)
-        slidesList.add(image1)
-        slidesList.add(image2)
-        slidesList.add(image3)
+    @SuppressLint("SetTextI18n")
+    private fun getDocuments(){
+        val db = FirebaseFirestore.getInstance()
+        val documentId = intent.getStringExtra("documentId")
 
-        val imageSlider = binding.viewSlider
-        imageSlider.setImageList(slidesList)
+        db.collection("Properties").document(documentId!!)
+            .get().addOnSuccessListener {   document ->
+                val imageOne = document.data?.get("imageOne")
+                val imageTwo = document.data?.get("imageTwo")
+                val imageTree = document.data?.get("imageTree")
+                val type = document.data?.get("type")
+                val cep = document.data?.get("cep")
+                val logradouro = document.data?.get("logradouro")
+                val district = document.data?.get("district")
+                val state = document.data?.get("state")
+                val city = document.data?.get("city")
+                val water = document.data?.get("water")
+                val energy = document.data?.get("energy")
+                val price = document.data?.get("price")
+                val number = document.data?.get("number")
+
+                if (imageOne.toString().isNotEmpty()){
+                    val image_one = SlideModel(imageOne.toString())
+                    slidesList.add(image_one)
+                }
+                if (imageTwo.toString().isNotEmpty()){
+                    val image_two = SlideModel(imageTwo.toString())
+                    slidesList.add(image_two)
+                }
+                if (imageTree.toString().isNotEmpty()){
+                    val image_tree = SlideModel(imageTree.toString())
+                    slidesList.add(image_tree)
+                }
+
+                binding.viewSlider.setImageList(slidesList)
+                binding.txtType.text = type.toString()
+                binding.txtPrice.text = price.toString()
+                binding.localization.text = "${logradouro.toString()} N°${number.toString()}, ${district.toString()}, " +
+                        "${city.toString()}-${state.toString()}, ${cep.toString()}"
+                binding.txtEnergy.text = energy.toString()
+                binding.water.text = water.toString()
+
+            }
     }
+
+//    private fun getImage(){
+//        val image1 = SlideModel(R.drawable.logo)
+//        val image2 = SlideModel(R.drawable.avatar)
+//        val image3 = SlideModel(R.drawable.ic_apartment)
+//        slidesList.add(image1)
+//        slidesList.add(image2)
+//        slidesList.add(image3)
+//
+//        val imageSlider = binding.viewSlider
+//        imageSlider.setImageList(slidesList)
+//    }
 
     private fun visibleInfoProperty(){
         when{
@@ -118,7 +164,9 @@ class Detail : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.menu_edit) {
+            val documentId = intent.getStringExtra("documentId")
             val intent = Intent(this, EditApartament::class.java)
+            intent.putExtra("documentId", documentId)
             startActivity(intent)
         }
         if (id == R.id.menu_payment){

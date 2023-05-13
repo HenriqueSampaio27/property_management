@@ -213,7 +213,7 @@
             app:layout_constraintBottom_toBottomOf="@id/view_image3"
             app:layout_constraintRight_toRightOf="@id/view_image3"
             app:layout_constraintLeft_toRightOf="@id/txt_image3"
-            />
+             />
 
         <View
             android:id="@+id/background_image"

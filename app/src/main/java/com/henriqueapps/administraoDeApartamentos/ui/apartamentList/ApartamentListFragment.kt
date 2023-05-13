@@ -1,16 +1,20 @@
 package com.henriqueapps.administraoDeApartamentos.ui.apartamentList
 
+import android.annotation.SuppressLint
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.henriqueapps.administraoDeApartamentos.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.henriqueapps.administraoDeApartamentos.adapter.AdapterApartament
 import com.henriqueapps.administraoDeApartamentos.databinding.FragmentApartamentListBinding
 import com.henriqueapps.administraoDeApartamentos.model.Apartament
+
 
 class ApartamentListFragment : Fragment() {
 
@@ -40,6 +44,10 @@ class ApartamentListFragment : Fragment() {
         adapterApartament = AdapterApartament(this.requireContext(), listApartament)
         recyclerViewApartament.adapter = adapterApartament
         recyclerViewApartament.hasFixedSize()
+    }
+
+    override fun onStart() {
+        super.onStart()
         getApartament()
     }
 
@@ -48,26 +56,33 @@ class ApartamentListFragment : Fragment() {
         _binding = null
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getApartament(){
-        val ap1 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.logo)
-        listApartament.add(ap1)
+        val db = FirebaseFirestore.getInstance()
+        val userUUID = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val ap2 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.ic_launcher_background)
-        listApartament.add(ap2)
+        db.collection("Properties").whereEqualTo("owner", userUUID)
+            .get().addOnSuccessListener {documents ->
+                for (document in documents){
+                    val documentId = document.id
+                    var image = document.data["imageOne"].toString()
+                    val price = document.data["price"].toString()
+                    val logradouro = document.data["logradouro"].toString()
+                    val district = document.data["district"].toString()
 
-        val ap3 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.ic_launcher_background)
-        listApartament.add(ap3)
+                    if (image.isEmpty()){
+                        db.collection("Aplication").document("aplicationLogo")
+                            .addSnapshotListener { value, error ->
+                                if (value != null){
+                                    image = value.getString("logo")!!
+                                }
+                            }
+                    }
+                    listApartament.add(Apartament(price,logradouro, district, image,  documentId))
+                    adapterApartament.notifyDataSetChanged()
+                }
 
-        val ap4 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.ic_launcher_background)
-        listApartament.add(ap4)
+            }
 
-        val ap5 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.ic_launcher_background)
-        listApartament.add(ap5)
-
-        val ap6 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.ic_launcher_background)
-        listApartament.add(ap6)
-
-        val ap7 = Apartament("R$ 350,00", "Rua Fernando Sarney", "Vila Marcony", R.drawable.ic_launcher_background)
-        listApartament.add(ap7)
     }
 }
