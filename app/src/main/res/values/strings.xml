@@ -120,4 +120,16 @@
     //add_image screen string
     <string name="buttom_save">Salvar</string>
 
+    //apartament_rent screen strings
+    <string name="title_rent">Aluguel</string>
+    <string name="name_renter">Locatário</string>
+    <string name="entry_date">Data de entrada</string>
+    <string name="text_observation">Observação</string>
+    <string name="text_discount">Desconto no aluguel</string>
+    <string name="text_percentage">Porcentagem(%)</string>
+    <string name="text_value">Valor</string>
+    <string name="text_real_value">Valor real</string>
+    <string name="text_discounted_value">Valor com desconto</string>
+    <string name="text_button_save">Salvar</string>
+
 </resources>

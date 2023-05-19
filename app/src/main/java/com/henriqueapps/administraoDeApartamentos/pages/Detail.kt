@@ -29,6 +29,7 @@ class Detail : AppCompatActivity() {
     private lateinit var dialog: AlertDialog
     private lateinit var energy: String
     private lateinit var water : String
+    private lateinit var price : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,26 +76,30 @@ class Detail : AppCompatActivity() {
                 val city = document.data?.get("city").toString()
                 water = document.data?.get("water").toString()
                 energy = document.data?.get("energy").toString()
-                val price = document.data?.get("price").toString()
-                val number = document.data?.get("number").toString()
+                price = document.data?.get("price").toString()
+                var number = document.data?.get("number").toString()
 
-
-                if (imageOne.isNotEmpty()){
+                if (number == "Sem número"){
+                    number = ", Sem número"
+                }else{
+                    number = ", $number"
+                }
+                if (imageOne.isNotEmpty() && slidesList.size <3){
                     val image_one = SlideModel(imageOne)
                     slidesList.add(image_one)
                 }
-                if (imageTwo.isNotEmpty()){
+                if (imageTwo.isNotEmpty() && slidesList.size <3){
                     val image_two = SlideModel(imageTwo)
                     slidesList.add(image_two)
                 }
-                if (imageTree.isNotEmpty()){
+                if (imageTree.isNotEmpty() && slidesList.size <3){
                     val image_tree = SlideModel(imageTree)
                     slidesList.add(image_tree)
                 }
                 binding.viewSlider.setImageList(slidesList)
                 binding.txtType.text = type
-                binding.txtPrice.text = price
-                binding.localization.text = "${logradouro} N°${number}, ${district}, ${city}-${state}, ${cep}"
+                binding.txtPrice.text = "R$ ${String.format("%.2f", price.toDouble())}"
+                binding.localization.text = "$logradouro$number, $district, $city-$state, $cep"
                 binding.txtEnergy.text = energy
                 binding.water.text = water
 
@@ -172,7 +177,11 @@ class Detail : AppCompatActivity() {
 
         }
         if (id == R.id.menu_rent){
-
+            val documentId = intent.getStringExtra("documentID")!!
+            val intent = Intent(this, ApartmentRent::class.java)
+            intent.putExtra("value", price)
+            intent.putExtra("documentId", documentId)
+            startActivity(intent)
         }
         if (id == R.id.menu_delete){
             dialogDelete()
@@ -201,7 +210,7 @@ class Detail : AppCompatActivity() {
     private fun deleteProperty(){
         val db = FirebaseFirestore.getInstance()
         val user = FirebaseAuth.getInstance().currentUser
-        val document = "bfeerv"
+        val document = intent.getStringExtra("documentId")!!
 
         db.collection("Properties").document(document)
             .delete().addOnSuccessListener {
@@ -210,5 +219,10 @@ class Detail : AppCompatActivity() {
             }.addOnFailureListener {
                 Log.d(TAG, it.toString())
             }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

@@ -21,7 +21,7 @@ class ApartamentListFragment : Fragment() {
     private var _binding: FragmentApartamentListBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapterApartament: AdapterApartament
-    private val listApartament: MutableList<Apartament> = mutableListOf()
+    private var listApartament: MutableList<Apartament> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +69,7 @@ class ApartamentListFragment : Fragment() {
                     val price = document.data["price"].toString()
                     val logradouro = document.data["logradouro"].toString()
                     val district = document.data["district"].toString()
+                    val type = document.data["type"].toString()
 
                     if (image.isEmpty()){
                         db.collection("Aplication").document("aplicationLogo")
@@ -78,11 +79,16 @@ class ApartamentListFragment : Fragment() {
                                 }
                             }
                     }
-                    listApartament.add(Apartament(price,logradouro, district, image,  documentId))
+                    listApartament.add(Apartament(price,logradouro, district, image,  documentId, type))
                     adapterApartament.notifyDataSetChanged()
                 }
 
             }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        listApartament = mutableListOf()
     }
 }

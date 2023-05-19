@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -72,39 +73,35 @@ class EditApartament : AppCompatActivity() {
     }
 
     private fun verificationOptions(){
-        var number = ""
-        var energy = ""
-        var water = ""
+        var number : String
+        var energy : String
+        var water : String
 
         db.collection("Properties").document(documentId!!)
             .get().addOnSuccessListener {   document ->
                 number = document.data!!["number"].toString()
                 energy = document.data!!["energy"].toString()
                 water = document.data!!["water"].toString()
+
+                binding.addEnergy.isVisible = (energy.isEmpty() || energy == "Sem número")
+                binding.addWater.isVisible = water.isEmpty()
+                binding.addNumber.isVisible = number.isEmpty()
             }.addOnFailureListener {
                 Log.d(TAG, it.toString())
             }
-
-        binding.addEnergy.isVisible = energy.isEmpty()
-        binding.addWater.isVisible = water.isEmpty()
-        binding.addNumber.isVisible = number.isEmpty()
-
     }
 
     private fun dialogUpdateNumber(view: View) {
-        val inflater = layoutInflater
+        val bindingNumber : DialogNumberUpdateBinding = DialogNumberUpdateBinding.inflate(layoutInflater)
         val update = AlertDialog.Builder(view.context)
             .setTitle("Insira o número da Propriedade")
-            .setView(inflater.inflate(R.layout.dialog_number_update, null))
+            .setView(bindingNumber.root)
             .setPositiveButton("Salvar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
-                    updateNumber = DialogNumberUpdateBinding.inflate(layoutInflater).updateNumber.text.toString()
+                    updateNumber = bindingNumber.updateNumber.text.toString()
+                    Log.d(TAG, updateNumber)
                     db.collection("Properties").document(documentId)
-                        .update(
-                            mapOf(
-                                "number" to updateNumber
-                            )
-                        ).addOnSuccessListener {
+                        .update("number", updateNumber).addOnSuccessListener {
                             Toast.makeText(this, "Número adicionado com sucesso!", Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
                             Log.d(TAG, it.toString())
@@ -121,19 +118,15 @@ class EditApartament : AppCompatActivity() {
     }
 
     private fun dialogUpdateValue(view: View) {
-        val inflater = layoutInflater
+        val bindingValue: DialogUpdateValueBinding = DialogUpdateValueBinding.inflate(layoutInflater)
         val update = AlertDialog.Builder(view.context)
             .setTitle("Insira o novo valor da propriedade")
-            .setView(inflater.inflate(R.layout.dialog_update_value, null))
+            .setView(bindingValue.root)
             .setPositiveButton("Atualizar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
-                    updateValue = DialogUpdateValueBinding.inflate(layoutInflater).updateValue.getNumericValue().toString()
+                    updateValue = bindingValue.updateValue.getNumericValue().toString()
                     db.collection("Properties").document(documentId)
-                        .update(
-                            mapOf(
-                                "price" to updateValue
-                            )
-                        ).addOnSuccessListener {
+                        .update("price", updateValue).addOnSuccessListener {
                             Toast.makeText(this, "Valor atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
                             Log.d(TAG, it.toString())
@@ -150,20 +143,16 @@ class EditApartament : AppCompatActivity() {
     }
 
     private fun dialogUpdateWater(view: View) {
-        val inflater = layoutInflater
+        val bindingWater: DialogWaterUpdateBinding = DialogWaterUpdateBinding.inflate(layoutInflater)
         val update = AlertDialog.Builder(view.context)
             .setTitle("Insira o número da água")
             .setMessage("Número localizado na matricula do papel!")
-            .setView(inflater.inflate(R.layout.dialog_water_update, null))
+            .setView(bindingWater.root)
             .setPositiveButton("Salvar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
-                    updateWater = DialogWaterUpdateBinding.inflate(layoutInflater).waterUpdate.text.toString()
+                    updateWater = bindingWater.waterUpdate.text.toString()
                     db.collection("Properties").document(documentId)
-                        .update(
-                            mapOf(
-                                "water" to updateWater
-                            )
-                        ).addOnSuccessListener {
+                        .update("water", updateWater).addOnSuccessListener {
                             Toast.makeText(this, "Matricula de água adicionada com sucesso!", Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
                             Log.d(TAG, it.toString())
@@ -180,20 +169,16 @@ class EditApartament : AppCompatActivity() {
     }
 
     private fun dialogUpdateEnergy(view: View) {
-        val inflater = layoutInflater
+        val bindingEnergy: DialogEnergyUpdateBinding = DialogEnergyUpdateBinding.inflate(layoutInflater)
         val update = AlertDialog.Builder(view.context)
             .setTitle("Insira o número da Energia")
             .setMessage("Número localizado na conta contrato do papel!")
-            .setView(inflater.inflate(R.layout.dialog_energy_update, null))
+            .setView(bindingEnergy.root)
             .setPositiveButton("Salvar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
-                    updateEnergy = DialogEnergyUpdateBinding.inflate(layoutInflater).energyUpdate.text.toString()
+                    updateEnergy = bindingEnergy.energyUpdate.text.toString()
                     db.collection("Properties").document(documentId)
-                        .update(
-                            mapOf(
-                                "energy" to updateEnergy
-                            )
-                        ).addOnSuccessListener {
+                        .update("energy", updateEnergy).addOnSuccessListener {
                             Toast.makeText(this, "Conta contrato adicionada com sucesso!", Toast.LENGTH_SHORT).show()
                         }.addOnFailureListener {
                             Log.d(TAG, it.toString())

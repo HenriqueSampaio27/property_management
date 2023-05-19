@@ -80,7 +80,7 @@ class RegistrationApartament : AppCompatActivity() {
                 binding.editState.error = "Insira o Estado!"
 
             }
-            price.toString() == "0.0" -> {
+            price == 0.0 -> {
                 binding.editPrice.error = "Insira o Valor!"
             }
             else -> {

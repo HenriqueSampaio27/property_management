@@ -23,7 +23,8 @@ class AdapterApartament (private val context: Context, private val listApartamen
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ApartamentViewHolder, position: Int) {
         holder.address.text = "${listApartament[position].logradouro}, ${listApartament[position].district}"
-        holder.price.text = listApartament[position].price
+        holder.price.text = "R$ ${String.format("%.2f", listApartament[position].price.toString().toDouble())}"
+        holder.type.text = listApartament[position].type
         Glide.with(context).asBitmap().load(listApartament[position].image).into(holder.image)
 
         holder.image.setOnClickListener {
@@ -39,5 +40,6 @@ class AdapterApartament (private val context: Context, private val listApartamen
         val address = binding.txtAddress
         val price = binding.price
         val image = binding.imageApartament
+        val type = binding.idType
     }
 }
