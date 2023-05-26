@@ -33,6 +33,6 @@ class DatePickerFragment(val callback: (result: String) -> Unit) : DialogFragmen
             dayString = day.toString()
         }
 
-        callback("$dayString / $monthString / $yearString")
+        callback("$dayString/$monthString/$yearString")
     }
 }

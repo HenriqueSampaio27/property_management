@@ -26,6 +26,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/white"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <TextView
             android:id="@+id/txt_type"
             android:layout_width="wrap_content"
@@ -94,7 +105,6 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_line1"
-            app:layout_constraintBottom_toTopOf="@id/view_line2"
             />
 
         <ImageView
@@ -304,7 +314,7 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/dark_gray"
             android:fontFamily="@font/montserrat_medium"
-            app:layout_constraintTop_toBottomOf="@id/txt_status"
+            app:layout_constraintTop_toBottomOf="@id/txt_renter"
             app:layout_constraintLeft_toLeftOf="parent"
             />
 
@@ -319,7 +329,7 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/black"
             android:fontFamily="@font/montserrat_medium"
-            app:layout_constraintTop_toBottomOf="@id/status_info"
+            app:layout_constraintTop_toBottomOf="@id/renter"
             app:layout_constraintRight_toRightOf="parent"
             />
 
@@ -354,6 +364,36 @@
             />
 
         <TextView
+            android:id="@+id/txt_rent_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_rent_price"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/montserrat_medium"
+            app:layout_constraintTop_toBottomOf="@id/txt_days_delay"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/rent_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_medium"
+            app:layout_constraintTop_toBottomOf="@id/days_delay"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <TextView
             android:id="@+id/txt_renter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -364,7 +404,7 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/dark_gray"
             android:fontFamily="@font/montserrat_medium"
-            app:layout_constraintTop_toBottomOf="@id/txt_days_delay"
+            app:layout_constraintTop_toBottomOf="@id/txt_status"
             app:layout_constraintLeft_toLeftOf="parent"
             />
 
@@ -379,8 +419,40 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/black"
             android:fontFamily="@font/montserrat_medium"
-            app:layout_constraintTop_toBottomOf="@id/days_delay"
+            app:layout_constraintTop_toBottomOf="@id/status_info"
             app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/txt_observation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_observation_detail"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/montserrat_medium"
+            app:layout_constraintTop_toBottomOf="@id/txt_rent_price"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <com.codesgood.views.JustifiedTextView
+            android:id="@+id/observation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_medium"
+            app:layout_constraintTop_toBottomOf="@id/txt_observation"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

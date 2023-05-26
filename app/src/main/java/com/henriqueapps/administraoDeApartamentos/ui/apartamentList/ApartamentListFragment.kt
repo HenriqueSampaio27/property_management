@@ -3,9 +3,12 @@ package com.henriqueapps.administraoDeApartamentos.ui.apartamentList
 import android.annotation.SuppressLint
 import android.media.Image
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -44,11 +47,20 @@ class ApartamentListFragment : Fragment() {
         adapterApartament = AdapterApartament(this.requireContext(), listApartament)
         recyclerViewApartament.adapter = adapterApartament
         recyclerViewApartament.hasFixedSize()
+
+        binding.progressCircular.isVisible = true
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.progressCircular.isVisible = false
+            binding.recyclerViewApartament.isVisible = true
+        }, 1500)
+
     }
 
     override fun onStart() {
         super.onStart()
         getApartament()
+
     }
 
     override fun onDestroyView() {
@@ -63,6 +75,9 @@ class ApartamentListFragment : Fragment() {
 
         db.collection("Properties").whereEqualTo("owner", userUUID)
             .get().addOnSuccessListener {documents ->
+                if (documents == null){
+                    binding.textNullProperties.isVisible = true
+                }
                 for (document in documents){
                     val documentId = document.id
                     var image = document.data["imageOne"].toString()
@@ -82,9 +97,7 @@ class ApartamentListFragment : Fragment() {
                     listApartament.add(Apartament(price,logradouro, district, image,  documentId, type))
                     adapterApartament.notifyDataSetChanged()
                 }
-
             }
-
     }
 
     override fun onPause() {

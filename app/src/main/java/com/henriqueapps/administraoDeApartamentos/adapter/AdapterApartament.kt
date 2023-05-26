@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.henriqueapps.administraoDeApartamentos.databinding.ApartamentItemBinding
 import com.henriqueapps.administraoDeApartamentos.model.Apartament
 import com.henriqueapps.administraoDeApartamentos.pages.Detail
+import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
 
 class AdapterApartament (private val context: Context, private val listApartament: MutableList<Apartament>):
     RecyclerView.Adapter<AdapterApartament.ApartamentViewHolder>(){
@@ -23,7 +24,7 @@ class AdapterApartament (private val context: Context, private val listApartamen
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ApartamentViewHolder, position: Int) {
         holder.address.text = "${listApartament[position].logradouro}, ${listApartament[position].district}"
-        holder.price.text = "R$ ${String.format("%.2f", listApartament[position].price.toString().toDouble())}"
+        holder.price.text = "R$ ${decimalFormat(listApartament[position].price.toString().toDouble())}"
         holder.type.text = listApartament[position].type
         Glide.with(context).asBitmap().load(listApartament[position].image).into(holder.image)
 

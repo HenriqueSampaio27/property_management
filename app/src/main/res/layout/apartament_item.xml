@@ -24,7 +24,7 @@
 
         <View
             android:id="@+id/background_price"
-            android:layout_width="150dp"
+            android:layout_width="165dp"
             android:layout_height="90dp"
             android:background="@color/black_opacity"
             app:layout_constraintLeft_toLeftOf="@id/image_apartament"

@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,9 +20,16 @@ import androidx.core.view.isVisible
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.henriqueapps.administraoDeApartamentos.HomeActivity
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityDetailBinding
+import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
+import java.text.SimpleDateFormat
+import java.time.temporal.ChronoUnit
+import java.util.Calendar
+import kotlin.math.abs
 
+@SuppressLint("SetTextI18n")
 class Detail : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
@@ -30,6 +39,8 @@ class Detail : AppCompatActivity() {
     private lateinit var energy: String
     private lateinit var water : String
     private lateinit var price : String
+    private lateinit var rentPrice: String
+    private var state: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +62,97 @@ class Detail : AppCompatActivity() {
             visibleInfoProperty()
         }
 
+        binding.cardView.isVisible = true
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.cardView.isVisible = false
+        }, 500)
+
+        rentData()
+    }
+
+
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
+    private fun rentedOrLeased(rent: String, date: String, price: String, observation: String, numberOfMonth: Int, lateFee: Double) {
+
+        binding.statusInfo.text = "Alugado"
+        state = true
+        rentPrice = price
+
+        if (rent.isNotEmpty()){
+            binding.txtRenter.isVisible = true
+            binding.renter.isVisible = true
+            binding.renter.text = rent
+        }
+
+        val dataFormat = SimpleDateFormat("dd/MM/yyyy")
+
+        val calendar = Calendar.getInstance()
+        calendar.set("${date[6]}${date[7]}${date[8]}${date[9]}".toInt(), "${date[3]}${date[4]}".toInt(), "${date[0]}${date[1]}".toInt())
+        calendar.add(Calendar.MONTH, numberOfMonth)
+        val dueDate = dataFormat.format(calendar.time)
+
+        binding.dueDate.text = dueDate
+        binding.dueDate.isVisible = true
+        binding.txtDate.isVisible = true
+
+        val currentCalendar = Calendar.getInstance().time
+        val currentData = dataFormat.format(currentCalendar)
+        val comparison = dueDate.compareTo(currentData)
+
+        val days = abs(ChronoUnit.DAYS.between(currentCalendar.toInstant(), calendar.toInstant()))
+
+        if (comparison < 0){
+            binding.daysDelay.isVisible = true
+            binding.txtDaysDelay.isVisible = true
+            if (days.toInt() == 1){
+                binding.daysDelay.text = "$days dia"
+            }else{
+                binding.daysDelay.text = "$days dias"
+            }
+        }
+
+        if(comparison < 0){
+            binding.txtRentPrice.isVisible = true
+            binding.rentPrice.isVisible = true
+            val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee/100))
+            binding.rentPrice.text = "R$ ${decimalFormat(lateFeeValue)}"
+        }else{
+            binding.txtRentPrice.isVisible = true
+            binding.rentPrice.isVisible = true
+            binding.rentPrice.text = "R$ $rentPrice"
+        }
+
+        if (observation.isNotEmpty()){
+            binding.txtObservation.isVisible = true
+            binding.observation.isVisible = true
+            binding.observation.text = observation
+        }
+
+    }
+
+    private fun rentData(){
+        val db = FirebaseFirestore.getInstance()
+        val documentId = intent.getStringExtra("documentId")!!
+
+        db.collection("Rent").document(documentId).get()
+            .addOnSuccessListener { result ->
+                if (result.exists()){
+                    val rent = result.data!!["renter"].toString()
+                    val date = result.data!!["date"].toString()
+                    val price = result.data!!["confirmedPrice"].toString()
+                    val observation = result.data!!["observation"].toString()
+                    val numberOfMonth = result.data!!["numberOfMonth"].toString().toInt()
+                    val lateFee = result.data!!["lateFee"].toString().toDouble()
+
+                    rentedOrLeased(rent, date, price, observation, numberOfMonth, lateFee)
+                }else{
+                    binding.statusInfo.text = "Livre"
+                    state = false
+                }
+            }.addOnFailureListener {
+                Log.d(TAG, it.toString())
+            }
     }
 
     override fun onStart() {
@@ -82,23 +184,23 @@ class Detail : AppCompatActivity() {
                 if (number == "Sem número"){
                     number = ", Sem número"
                 }else{
-                    number = ", $number"
+                    number = " Nº$number"
                 }
-                if (imageOne.isNotEmpty() && slidesList.size <3){
-                    val image_one = SlideModel(imageOne)
-                    slidesList.add(image_one)
+                if (imageOne.isNotEmpty() && slidesList.size <1){
+                    val slideImageOne = SlideModel(imageOne)
+                    slidesList.add(slideImageOne)
                 }
-                if (imageTwo.isNotEmpty() && slidesList.size <3){
-                    val image_two = SlideModel(imageTwo)
-                    slidesList.add(image_two)
+                if (imageTwo.isNotEmpty() && slidesList.size <2){
+                    val slideImageTwo = SlideModel(imageTwo)
+                    slidesList.add(slideImageTwo)
                 }
                 if (imageTree.isNotEmpty() && slidesList.size <3){
-                    val image_tree = SlideModel(imageTree)
-                    slidesList.add(image_tree)
+                    val slideImageTree = SlideModel(imageTree)
+                    slidesList.add(slideImageTree)
                 }
                 binding.viewSlider.setImageList(slidesList)
                 binding.txtType.text = type
-                binding.txtPrice.text = "R$ ${String.format("%.2f", price.toDouble())}"
+                binding.txtPrice.text = "R$ ${decimalFormat(price.toDouble())}"
                 binding.localization.text = "$logradouro$number, $district, $city-$state, $cep"
                 binding.txtEnergy.text = energy
                 binding.water.text = water
@@ -127,7 +229,7 @@ class Detail : AppCompatActivity() {
                 }
 
             }
-            !stateInfoProperty -> {
+            !this.stateInfoProperty -> {
                 binding.imageInfoProperty.setImageResource(R.drawable.ic_next)
                 binding.viewLine2.isVisible = true
                 binding.viewLocalization.isVisible = false
@@ -177,11 +279,20 @@ class Detail : AppCompatActivity() {
 
         }
         if (id == R.id.menu_rent){
-            val documentId = intent.getStringExtra("documentID")!!
-            val intent = Intent(this, ApartmentRent::class.java)
-            intent.putExtra("value", price)
-            intent.putExtra("documentId", documentId)
-            startActivity(intent)
+            val documentId = intent.getStringExtra("documentId")!!
+
+            if (state){
+                val intent = Intent(this, RentedApartamentRent::class.java)
+                intent.putExtra("value", price)
+                intent.putExtra("documentId", documentId)
+                startActivity(intent)
+            }else{
+                val intent = Intent(this, ApartmentRent::class.java)
+                intent.putExtra("value", price)
+                intent.putExtra("documentId", documentId)
+                startActivity(intent)
+            }
+
         }
         if (id == R.id.menu_delete){
             dialogDelete()
@@ -221,6 +332,7 @@ class Detail : AppCompatActivity() {
             }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
         finish()

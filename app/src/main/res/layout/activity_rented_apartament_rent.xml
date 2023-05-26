@@ -11,7 +11,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".pages.ApartmentRent">
+        tools:context=".pages.RentedApartamentRent">
 
         <View
             android:id="@+id/view_top"
@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_rent"
+            android:text="@string/tittle_rented"
             android:textSize="25sp"
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat_semibold"
@@ -75,31 +75,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/text_entry_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="@string/entry_date"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginLeft="20dp"
-            app:layout_constraintBottom_toTopOf="@id/text_discount"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutRenter" />
-
-        <ImageView
-            android:id="@+id/image_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_date_range"
-            android:layout_marginRight="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/text_discount"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutRenter" />
-
-        <TextView
             android:id="@+id/text_discount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,7 +86,7 @@
             android:textSize="20sp"
             android:layout_marginLeft="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_entry_date"/>
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutRenter"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/image_swich"
@@ -121,7 +96,7 @@
             android:layout_marginRight="20dp"
             app:layout_constraintBottom_toTopOf="@+id/textInputLayoutDiscountValue"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_entry_date" />
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutRenter" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutDiscountValue"
@@ -295,6 +270,25 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_release"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_button_release"
+            android:fontFamily="@font/montserrat_semibold"
+            android:padding="15dp"
+            android:textSize="18sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/background_button_cadastrar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/button_save"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutObservation"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -310,7 +304,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutObservation"
+            app:layout_constraintTop_toBottomOf="@id/button_release"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

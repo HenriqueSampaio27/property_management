@@ -24,12 +24,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.henriqueapps.administraoDeApartamentos.HomeActivity
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRegistrationApartamentFinishBinding
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.net.IDN
 import java.util.*
 
 
@@ -95,6 +97,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationApartamentFinishBinding.inflate(layoutInflater)
@@ -263,8 +266,6 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            val baos = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
 
             val uri = getImageUri(applicationContext, imageBitmap)
             val file = File(getRealPathFromUri(uri))
@@ -303,12 +304,15 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         val title = UUID.randomUUID().toString()
         val bytes = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        //val imageBitmap2 = Bitmap.createScaledBitmap(imageBitmap, 1000, 800, true)
         val paths = Images.Media.insertImage(applicationContext!!.contentResolver, imageBitmap, title, null)
         return Uri.parse(paths)
 
     }
 
     private fun propertyRegistration(){
+        binding.progressCircular.isVisible = true
+        binding.progressCircular.isFocused
         val cep = intent.getStringExtra("cep").toString()
         val logradouro = intent.getStringExtra("logradouro").toString()
         val district = intent.getStringExtra("district").toString()
@@ -324,7 +328,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             number = "Sem número"
         }
 
-        if(!type.isEmpty()){
+        if(type.isNotEmpty()){
             val archiveUuid = UUID.randomUUID().toString()
             val archiveNameOne = UUID.randomUUID().toString()
             val archiveNameTwo = UUID.randomUUID().toString()
@@ -338,7 +342,6 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
 
             val intent = Intent(this, HomeActivity::class.java)
-            Log.i(TAG, uriOne.toString())
             if(uriOne.toString().isNotEmpty() && uriTwo.toString().isNotEmpty() && uriTree.toString()
                     .isNotEmpty()) {
                 referenceOne.putFile(uriOne).addOnSuccessListener {
@@ -378,6 +381,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                                             )
                                                 .show()
                                             startActivity(intent)
+                                            finish()
                                         }.addOnFailureListener {
                                             Log.i("RegistrationApartamentFinish", it.toString())
                                         }
@@ -409,7 +413,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                                 val imageUriTree = ""
                                 val apartament: MutableMap<String, String> = HashMap()
 
-                                apartament["usuario"] = usuarioId
+                                apartament["owner"] = usuarioId
                                 apartament["cep"] = cep
                                 apartament["logradouro"] = logradouro
                                 apartament["number"] = number
@@ -435,6 +439,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                                     )
                                         .show()
                                     startActivity(intent)
+                                    finish()
                                 }.addOnFailureListener {
                                     Log.i("RegistrationApartamentFinish", it.toString())
                                 }
@@ -458,7 +463,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                         val imageUriTree = ""
                         val apartament: MutableMap<String, String> = HashMap()
 
-                        apartament["usuario"] = usuarioId
+                        apartament["owner"] = usuarioId
                         apartament["cep"] = cep
                         apartament["logradouro"] = logradouro
                         apartament["number"] = number
@@ -483,6 +488,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                             )
                                 .show()
                             startActivity(intent)
+                            finish()
                         }.addOnFailureListener {
                             Log.i("RegistrationApartamentFinish", it.toString())
                         }
@@ -498,7 +504,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                 val imageUriTree = ""
                 val apartament: MutableMap<String, String> = HashMap()
 
-                apartament["usuario"] = usuarioId
+                apartament["owner"] = usuarioId
                 apartament["cep"] = cep
                 apartament["logradouro"] = logradouro
                 apartament["number"] = number
@@ -523,6 +529,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
                     )
                         .show()
                     startActivity(intent)
+                    finish()
                 }.addOnFailureListener {
                     Log.i("RegistrationApartamentFinish", it.toString())
                 }
@@ -530,5 +537,6 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         }else{
             Toast.makeText(this, "Insira o tipo da propriedade!", Toast.LENGTH_SHORT).show()
         }
+        binding.progressCircular.isVisible = false
     }
 }

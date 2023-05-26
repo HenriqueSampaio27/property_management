@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,12 +24,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityHomeBinding
 import com.henriqueapps.administraoDeApartamentos.pages.Login
 import com.henriqueapps.administraoDeApartamentos.pages.Notifications
+import de.hdodenhof.circleimageview.CircleImageView
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navView : NavigationView
+    private lateinit var headerView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +55,8 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        val navigationView : NavigationView  = findViewById(R.id.nav_view)
+        headerView = navigationView.getHeaderView(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -86,15 +91,17 @@ class HomeActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
         val emailID = FirebaseAuth.getInstance().currentUser!!.email
+        val navUsername : TextView = headerView.findViewById(R.id.nameUser)
+        val navUserEmail : TextView = headerView.findViewById(R.id.emailUser)
+        val navUserImage: CircleImageView = headerView.findViewById(R.id.imageAvatar)
 
         val documentReference = db.collection("Usuarios").document(usuarioId)
-        documentReference.addSnapshotListener { value, error ->
+
+        documentReference.addSnapshotListener { value, _ ->
             if (value != null) {
-                Glide.with(applicationContext).load(value.getString("image")).into(findViewById(R.id.imageAvatar))
-                val name = findViewById<TextView>(R.id.nameUser)
-                name.text = value.getString("name")
-                val email = findViewById<TextView>(R.id.emailUser)
-                email.text = emailID
+                Glide.with(applicationContext).load(value.getString("image")).into(navUserImage)
+                navUsername.text = value.getString("name")!!
+                navUserEmail.text = emailID
             }
         }
     }

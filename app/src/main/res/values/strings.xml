@@ -37,6 +37,9 @@
     <string name="menu_calendar">Calendario</string>
     <string name="menu_settings">Configurações</string>
 
+    //Apartament list fragment strings
+    <string name="null_properties">Sem propriedades cadastradas</string>
+
     //Detail screen strings
     <string name="text_rent">Aluguel</string>
     <string name="information_property">Informações da propriedade</string>
@@ -50,6 +53,8 @@
     <string name="text_edit">Editar</string>
     <string name="text_payment">Pagamento</string>
     <string name="text_delete">Excluir</string>
+    <string name="text_rent_price">Valor a pagar</string>
+    <string name="text_observation_detail">Observação</string>
 
     //RegistrationApartament screen strings
     <string name="hint_cep">Cep</string>
@@ -127,9 +132,14 @@
     <string name="text_observation">Observação</string>
     <string name="text_discount">Desconto no aluguel</string>
     <string name="text_percentage">Porcentagem(%)</string>
+    <string name="text_late_fee">Multa por atraso(%)</string>
     <string name="text_value">Valor</string>
     <string name="text_real_value">Valor real</string>
     <string name="text_discounted_value">Valor com desconto</string>
     <string name="text_button_save">Salvar</string>
+    
+    //rented_apartament_rent screen strings
+    <string name="tittle_rented">Alterar aluguel</string>
+    <string name="text_button_release">Liberar Propriedade</string>
 
 </resources>
