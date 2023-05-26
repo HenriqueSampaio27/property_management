@@ -40,6 +40,9 @@ class Detail : AppCompatActivity() {
     private lateinit var water : String
     private lateinit var price : String
     private lateinit var rentPrice: String
+    private lateinit var amountToPay: String
+    private lateinit var numberOfMonth: String
+    private lateinit var lastPaymentDate: String
     private var state: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,11 +76,14 @@ class Detail : AppCompatActivity() {
 
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
-    private fun rentedOrLeased(rent: String, date: String, price: String, observation: String, numberOfMonth: Int, lateFee: Double) {
+    private fun rentedOrLeased(rent: String, date: String, price: String, observation: String, numberOfMonth: Int, lateFee: Double, amountToPay : String, lastPaymentDate: String) {
 
         binding.statusInfo.text = "Alugado"
         state = true
         rentPrice = price
+        this.amountToPay = amountToPay
+        this.numberOfMonth = numberOfMonth.toString()
+        this.lastPaymentDate = lastPaymentDate
 
         if (rent.isNotEmpty()){
             binding.txtRenter.isVisible = true
@@ -112,16 +118,30 @@ class Detail : AppCompatActivity() {
             }
         }
 
-        if(comparison < 0){
-            binding.txtRentPrice.isVisible = true
-            binding.rentPrice.isVisible = true
-            val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee/100))
-            binding.rentPrice.text = "R$ ${decimalFormat(lateFeeValue)}"
+        if(amountToPay.toDouble() == price.toDouble()){
+            if(comparison < 0){
+                binding.txtRentPrice.isVisible = true
+                binding.rentPrice.isVisible = true
+                val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee/100))
+                binding.rentPrice.text = "R$ ${decimalFormat(lateFeeValue)}"
+            }else{
+                binding.txtRentPrice.isVisible = true
+                binding.rentPrice.isVisible = true
+                binding.rentPrice.text = "R$ $rentPrice"
+            }
         }else{
-            binding.txtRentPrice.isVisible = true
-            binding.rentPrice.isVisible = true
-            binding.rentPrice.text = "R$ $rentPrice"
+            if(comparison < 0){
+                binding.txtRentPrice.isVisible = true
+                binding.rentPrice.isVisible = true
+                val lateFeeValue = amountToPay.toDouble() + (amountToPay.toDouble()*(days * lateFee/100))
+                binding.rentPrice.text = "R$ ${decimalFormat(lateFeeValue)}"
+            }else{
+                binding.txtRentPrice.isVisible = true
+                binding.rentPrice.isVisible = true
+                binding.rentPrice.text = "R$ $amountToPay"
+            }
         }
+
 
         if (observation.isNotEmpty()){
             binding.txtObservation.isVisible = true
@@ -144,8 +164,10 @@ class Detail : AppCompatActivity() {
                     val observation = result.data!!["observation"].toString()
                     val numberOfMonth = result.data!!["numberOfMonth"].toString().toInt()
                     val lateFee = result.data!!["lateFee"].toString().toDouble()
+                    val amountToPay = result.data!!["amountToPay"].toString()
+                    val lastPaymentDate = result.data!!["lastPaymentDate"].toString()
 
-                    rentedOrLeased(rent, date, price, observation, numberOfMonth, lateFee)
+                    rentedOrLeased(rent, date, price, observation, numberOfMonth, lateFee, amountToPay, lastPaymentDate)
                 }else{
                     binding.statusInfo.text = "Livre"
                     state = false
@@ -269,6 +291,8 @@ class Detail : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
+        val documentId = intent.getStringExtra("documentId")!!
+
         if (id == R.id.menu_edit) {
             val documentId = intent.getStringExtra("documentId")
             val intent = Intent(this, EditApartament::class.java)
@@ -276,14 +300,22 @@ class Detail : AppCompatActivity() {
             startActivity(intent)
         }
         if (id == R.id.menu_payment){
-
+            if (binding.statusInfo.text == "Alugado"){
+                val intent = Intent(this, Payment::class.java)
+                intent.putExtra("lastPaymentDate", lastPaymentDate)
+                intent.putExtra("value", price)
+                intent.putExtra("amountToPay", amountToPay)
+                intent.putExtra("documentId", documentId)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "A propriedade não está alugada!", Toast.LENGTH_SHORT).show()
+            }
         }
         if (id == R.id.menu_rent){
-            val documentId = intent.getStringExtra("documentId")!!
-
             if (state){
                 val intent = Intent(this, RentedApartamentRent::class.java)
                 intent.putExtra("value", price)
+                intent.putExtra("numberOfMonth", numberOfMonth)
                 intent.putExtra("documentId", documentId)
                 startActivity(intent)
             }else{

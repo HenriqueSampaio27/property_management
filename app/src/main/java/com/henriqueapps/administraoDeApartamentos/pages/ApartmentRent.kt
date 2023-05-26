@@ -146,6 +146,7 @@ class ApartmentRent : AppCompatActivity() {
             rent["renter"] = renter
             rent["date"] = date
             rent["confirmedPrice"] = newPrice
+            rent["amountToPay"] = newPrice
             rent["observation"] = observation
             rent["numberOfMonth"] = "1"
             rent["lateFee"] = lateFee

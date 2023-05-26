@@ -137,9 +137,16 @@
     <string name="text_real_value">Valor real</string>
     <string name="text_discounted_value">Valor com desconto</string>
     <string name="text_button_save">Salvar</string>
-    
+
     //rented_apartament_rent screen strings
     <string name="tittle_rented">Alterar aluguel</string>
     <string name="text_button_release">Liberar Propriedade</string>
 
+    //payment screen strings
+    <string name="title_payment">Pagamento</string>
+    <string name="pay_day">Data do Pagamento</string>
+    <string name="last_payment_date">Data do último pagamento</string>
+    <string name="amount_to_pay">Valor a pagar</string>
+    <string name="open_value">Valor em aberto</string>
+    <string name="text_button_confirm">Confirmar Pagamento</string>
 </resources>
