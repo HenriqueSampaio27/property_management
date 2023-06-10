@@ -1,10 +1,12 @@
 package com.henriqueapps.administraoDeApartamentos
 
-import android.content.ContentValues.TAG
+import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
-import android.nfc.Tag
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +20,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,6 +29,8 @@ import com.henriqueapps.administraoDeApartamentos.databinding.ActivityHomeBindin
 import com.henriqueapps.administraoDeApartamentos.pages.Login
 import com.henriqueapps.administraoDeApartamentos.pages.Notifications
 import de.hdodenhof.circleimageview.CircleImageView
+import ru.nikartm.support.BadgeDrawer
+import ru.nikartm.support.ImageBadgeView
 
 class HomeActivity : AppCompatActivity() {
 
@@ -32,6 +38,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navView : NavigationView
     private lateinit var headerView: View
+
+    private var mNotifiItemCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +70,9 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.home, menu)
+
         return true
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -86,8 +94,29 @@ class HomeActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    private fun getNotifications(){
+        val db = FirebaseFirestore.getInstance()
+        val userUUID = FirebaseAuth.getInstance().currentUser!!.uid
+        mNotifiItemCount = 0
+        db.collection("Properties").whereEqualTo("owner", userUUID)
+            .get().addOnSuccessListener {documents ->
+                for (document in documents){
+                    val documentId = document.id
+                    db.collection("Rent").document(documentId).get()
+                        .addOnSuccessListener { result ->
+                            if (result.exists()) {
+                                mNotifiItemCount += 1
+                            }
+                        }
+                }
+            }.addOnFailureListener {
+                Log.d(ContentValues.TAG, it.toString())
+            }
+    }
+
     override fun onStart() {
         super.onStart()
+        getNotifications()
         val db = FirebaseFirestore.getInstance()
         val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
         val emailID = FirebaseAuth.getInstance().currentUser!!.email
@@ -104,5 +133,17 @@ class HomeActivity : AppCompatActivity() {
                 navUserEmail.text = emailID
             }
         }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        Handler(Looper.getMainLooper()).postDelayed({
+            val badge = BadgeDrawable.create(this)
+            badge.number = mNotifiItemCount
+            badge.backgroundColor = Color.parseColor("#FFFFFF")
+            badge.badgeTextColor = Color.parseColor("#00A86B")
+            BadgeUtils.attachBadgeDrawable(badge, binding.appBarHome.toolbar, R.id.button_notifications)
+        }, 2000)
+        return super.onPrepareOptionsMenu(menu)
     }
 }

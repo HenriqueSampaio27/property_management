@@ -1,6 +1,7 @@
 package com.henriqueapps.administraoDeApartamentos.ui.apartamentList
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.media.Image
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +18,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.henriqueapps.administraoDeApartamentos.adapter.AdapterApartament
 import com.henriqueapps.administraoDeApartamentos.databinding.FragmentApartamentListBinding
 import com.henriqueapps.administraoDeApartamentos.model.Apartament
+import com.henriqueapps.administraoDeApartamentos.ui.registrationApartament.RegistrationApartament
+import com.henriqueapps.administraoDeApartamentos.useful.startActivity
 
 
 class ApartamentListFragment : Fragment() {
@@ -50,6 +53,10 @@ class ApartamentListFragment : Fragment() {
 
         binding.progressCircular.isVisible = true
 
+        binding.textRegisterAProperty.setOnClickListener {
+            startActivity(RegistrationApartament::class.java)
+        }
+
         Handler(Looper.getMainLooper()).postDelayed({
             binding.progressCircular.isVisible = false
             binding.recyclerViewApartament.isVisible = true
@@ -76,7 +83,7 @@ class ApartamentListFragment : Fragment() {
         db.collection("Properties").whereEqualTo("owner", userUUID)
             .get().addOnSuccessListener {documents ->
                 if (documents == null){
-                    binding.textNullProperties.isVisible = true
+                    binding.textRegisterAProperty.isVisible = true
                 }
                 for (document in documents){
                     val documentId = document.id

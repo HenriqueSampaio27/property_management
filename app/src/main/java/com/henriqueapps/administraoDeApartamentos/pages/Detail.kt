@@ -108,7 +108,7 @@ class Detail : AppCompatActivity() {
 
         val days = abs(ChronoUnit.DAYS.between(currentCalendar.toInstant(), calendar.toInstant()))
 
-        if (comparison < 0){
+        if (comparison > 0){
             binding.daysDelay.isVisible = true
             binding.txtDaysDelay.isVisible = true
             if (days.toInt() == 1){
@@ -119,7 +119,7 @@ class Detail : AppCompatActivity() {
         }
 
         if(amountToPay.toDouble() == price.toDouble()){
-            if(comparison < 0){
+            if(comparison > 0){
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
                 val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee/100))
@@ -130,7 +130,7 @@ class Detail : AppCompatActivity() {
                 binding.rentPrice.text = "R$ $rentPrice"
             }
         }else{
-            if(comparison < 0){
+            if(comparison > 0){
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
                 val lateFeeValue = amountToPay.toDouble() + (amountToPay.toDouble()*(days * lateFee/100))

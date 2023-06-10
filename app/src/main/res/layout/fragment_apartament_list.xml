@@ -7,10 +7,10 @@
     tools:context=".ui.apartamentList.ApartamentListFragment">
 
     <TextView
-        android:id="@+id/text_null_properties"
+        android:id="@+id/text_register_a_property"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/null_properties"
+        android:text="@string/register_a_property"
         android:textSize="18sp"
         android:textColor="@color/black_opacity"
         android:fontFamily="@font/montserrat_medium"

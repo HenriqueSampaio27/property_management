@@ -357,7 +357,7 @@
             android:visibility="gone"
             android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/red"
             android:fontFamily="@font/montserrat_medium"
             app:layout_constraintTop_toBottomOf="@id/due_date"
             app:layout_constraintRight_toRightOf="parent"
