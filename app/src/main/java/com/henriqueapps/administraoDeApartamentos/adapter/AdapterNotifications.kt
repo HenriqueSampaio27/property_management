@@ -2,12 +2,14 @@ package com.henriqueapps.administraoDeApartamentos.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.henriqueapps.administraoDeApartamentos.databinding.NotificationItemBinding
 import com.henriqueapps.administraoDeApartamentos.model.NotificationsModel
+import com.henriqueapps.administraoDeApartamentos.pages.Detail
 
 class AdapterNotifications(private val context: Context, private val listNotifications: MutableList<NotificationsModel>):
     RecyclerView.Adapter<AdapterNotifications.NotificationsViewHolder>(){
@@ -26,6 +28,22 @@ class AdapterNotifications(private val context: Context, private val listNotific
         holder.price.text = "R$ ${listNotifications[position].price?.toDouble()}"
         holder.date.text = listNotifications[position].date
         holder.address.text = "${listNotifications[position].logradouro}${listNotifications[position].number}"
+
+        holder.image.setOnClickListener {
+            val intent = Intent(context, Detail::class.java)
+            intent.putExtra("documentId", listNotifications[position].documentID)
+            context.startActivity(intent)
+        }
+        holder.price.setOnClickListener {
+            val intent = Intent(context, Detail::class.java)
+            intent.putExtra("documentId", listNotifications[position].documentID)
+            context.startActivity(intent)
+        }
+        holder.address.setOnClickListener {
+            val intent = Intent(context, Detail::class.java)
+            intent.putExtra("documentId", listNotifications[position].documentID)
+            context.startActivity(intent)
+        }
     }
 
     inner class NotificationsViewHolder(binding: NotificationItemBinding): RecyclerView.ViewHolder(binding.root){

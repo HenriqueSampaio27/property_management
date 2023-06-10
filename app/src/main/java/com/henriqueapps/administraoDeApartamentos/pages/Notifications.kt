@@ -75,7 +75,8 @@ class Notifications : AppCompatActivity() {
                                     price,
                                     date,
                                     numberOfMonth,
-                                    lateFee
+                                    lateFee,
+                                    documentId
                                 )
                             }
                         }
@@ -89,7 +90,7 @@ class Notifications : AppCompatActivity() {
     }
 
     @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
-    private fun insertNotification(image: String, logradouro: String, numberOrigin: String, price: String, date: String, numberOfMonth: String, lateFee: String){
+    private fun insertNotification(image: String, logradouro: String, numberOrigin: String, price: String, date: String, numberOfMonth: String, lateFee: String, documentID: String){
         val dataFormat = SimpleDateFormat("dd/MM/yyyy")
 
         val calendar = Calendar.getInstance()
@@ -110,7 +111,7 @@ class Notifications : AppCompatActivity() {
 
         if(comparison > 0){
             val lateFeeValue = (price.toDouble() + (price.toDouble()*(days * lateFee.toDouble()/100))).toString()
-            listNotifications.add(NotificationsModel(image, "Aluguel atrasado", logradouro, number, lateFeeValue, date))
+            listNotifications.add(NotificationsModel(image, "Aluguel atrasado", logradouro, number, lateFeeValue, date, documentID))
             adapterNotifications.notifyDataSetChanged()
 
         }

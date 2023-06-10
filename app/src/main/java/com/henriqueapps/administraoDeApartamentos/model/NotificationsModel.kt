@@ -6,6 +6,7 @@ class NotificationsModel(
     val logradouro: String? = null,
     val number: String? = null,
     val price: String? = null,
-    val date: String? = null
+    val date: String? = null,
+    val documentID: String? = null
 ) {
 }
