@@ -52,7 +52,6 @@ class Notifications : AppCompatActivity() {
     private fun getNotifications(){
         val db = FirebaseFirestore.getInstance()
         val userUUID = FirebaseAuth.getInstance().currentUser!!.uid
-
         db.collection("Properties").whereEqualTo("owner", userUUID)
             .get().addOnSuccessListener {documents ->
                 for (document in documents){
@@ -116,6 +115,11 @@ class Notifications : AppCompatActivity() {
 
         }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        listNotifications = mutableListOf()
     }
 
 }

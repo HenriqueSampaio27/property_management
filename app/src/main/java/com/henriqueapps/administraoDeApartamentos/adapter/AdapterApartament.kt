@@ -23,7 +23,12 @@ class AdapterApartament (private val context: Context, private val listApartamen
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ApartamentViewHolder, position: Int) {
-        holder.address.text = "${listApartament[position].logradouro}, ${listApartament[position].district}"
+        if(listApartament[position].number == "Sem número"){
+            holder.address.text = "${listApartament[position].logradouro}, Sem número"
+        }else{
+            holder.address.text = "${listApartament[position].logradouro} Nº${listApartament[position].number}"
+        }
+
         holder.price.text = "R$ ${decimalFormat(listApartament[position].price.toString().toDouble())}"
         holder.type.text = listApartament[position].type
         Glide.with(context).asBitmap().load(listApartament[position].image).into(holder.image)

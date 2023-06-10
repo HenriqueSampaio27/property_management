@@ -90,7 +90,7 @@ class ApartamentListFragment : Fragment() {
                     var image = document.data["imageOne"].toString()
                     val price = document.data["price"].toString()
                     val logradouro = document.data["logradouro"].toString()
-                    val district = document.data["district"].toString()
+                    val number = document.data["number"].toString()
                     val type = document.data["type"].toString()
 
                     if (image.isEmpty()){
@@ -101,7 +101,7 @@ class ApartamentListFragment : Fragment() {
                                 }
                             }
                     }
-                    listApartament.add(Apartament(price,logradouro, district, image,  documentId, type))
+                    listApartament.add(Apartament(price,logradouro, number, image,  documentId, type))
                     adapterApartament.notifyDataSetChanged()
                 }
             }
