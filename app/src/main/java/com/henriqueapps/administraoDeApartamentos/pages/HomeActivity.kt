@@ -1,4 +1,4 @@
-package com.henriqueapps.administraoDeApartamentos
+package com.henriqueapps.administraoDeApartamentos.pages
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -25,12 +25,9 @@ import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityHomeBinding
-import com.henriqueapps.administraoDeApartamentos.pages.Login
-import com.henriqueapps.administraoDeApartamentos.pages.Notifications
 import de.hdodenhof.circleimageview.CircleImageView
-import ru.nikartm.support.BadgeDrawer
-import ru.nikartm.support.ImageBadgeView
 
 class HomeActivity : AppCompatActivity() {
 
@@ -142,7 +139,9 @@ class HomeActivity : AppCompatActivity() {
             badge.number = mNotifiItemCount
             badge.backgroundColor = Color.parseColor("#FFFFFF")
             badge.badgeTextColor = Color.parseColor("#00A86B")
-            BadgeUtils.attachBadgeDrawable(badge, binding.appBarHome.toolbar, R.id.button_notifications)
+            BadgeUtils.attachBadgeDrawable(badge, binding.appBarHome.toolbar,
+                R.id.button_notifications
+            )
         }, 2000)
         return super.onPrepareOptionsMenu(menu)
     }

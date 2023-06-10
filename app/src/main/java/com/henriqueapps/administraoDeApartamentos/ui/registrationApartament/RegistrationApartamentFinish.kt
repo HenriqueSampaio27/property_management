@@ -2,7 +2,6 @@ package com.henriqueapps.administraoDeApartamentos.ui.registrationApartament
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -24,14 +23,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.storage.FirebaseStorage
-import com.henriqueapps.administraoDeApartamentos.HomeActivity
+import com.henriqueapps.administraoDeApartamentos.pages.HomeActivity
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRegistrationApartamentFinishBinding
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.IDN
 import java.util.*
 
 

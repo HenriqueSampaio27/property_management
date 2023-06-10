@@ -23,25 +23,33 @@
         tools:targetApi="31">
         <activity
             android:name=".pages.Payment"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".pages.RentedApartamentRent"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.ApartmentRent"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.AddImage"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.EditApartament"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.Notifications"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.EditProfile"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.registrationApartament.RegistrationApartamentFinish"
             android:exported="false"
@@ -50,15 +58,15 @@
         <activity
             android:name=".ui.registrationApartament.RegistrationApartament"
             android:exported="false"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".pages.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.Detail"
             android:exported="false"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".pages.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".pages.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
@@ -76,7 +84,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".pages.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.henriqueapps.administraoDeApartamentos
+package com.henriqueapps.administraoDeApartamentos.pages
 
 import android.content.Intent
 import android.graphics.Color
@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityMainBinding
-import com.henriqueapps.administraoDeApartamentos.pages.Login
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
