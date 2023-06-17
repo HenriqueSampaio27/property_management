@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityHomeBinding
+import com.henriqueapps.administraoDeApartamentos.model.Apartament
 import de.hdodenhof.circleimageview.CircleImageView
 
 class HomeActivity : AppCompatActivity() {
@@ -125,7 +127,16 @@ class HomeActivity : AppCompatActivity() {
 
         documentReference.addSnapshotListener { value, _ ->
             if (value != null) {
-                Glide.with(applicationContext).load(value.getString("image")).into(navUserImage)
+                if(value.getString("image")!!.isNotEmpty() || value.getString("image") != null){
+                    Glide.with(applicationContext).load(value.getString("image")).into(navUserImage)
+                }else{
+                    db.collection("Aplication").document("aplicationLogo")
+                        .addSnapshotListener { v, error ->
+                            if (v != null){
+                                Glide.with(applicationContext).load(v.getString("logo")!!).into(navUserImage)
+                            }
+                        }
+                }
                 navUsername.text = value.getString("name")!!
                 navUserEmail.text = emailID
             }

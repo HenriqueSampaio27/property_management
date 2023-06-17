@@ -9,8 +9,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.google.firebase.firestore.FirebaseFirestore
-import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityPaymentBinding
+import com.henriqueapps.administraoDeApartamentos.date.DatePickerFragment
 import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -36,9 +36,17 @@ class Payment : AppCompatActivity() {
             paymentConfirmed(amountToPay)
         }
 
-        binding.editValue.setText(amountToPay)
-        binding.valueReal.text = decimalFormat(amountToPay.toDouble())
+        val payment = decimalFormat(amountToPay.toDouble())
+        binding.editValue.setText(payment)
+        binding.valueReal.text = payment
         getCurrentDate()
+
+        binding.imageDate.setOnClickListener {
+            DatePickerFragment { result ->
+                binding.textPayDay.text = result
+            }
+                .show(supportFragmentManager, "datePicker")
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -58,10 +66,9 @@ class Payment : AppCompatActivity() {
     private fun paymentConfirmed(amountToPay: String){
         val db = FirebaseFirestore.getInstance()
         val documentId = intent.getStringExtra("documentId")!!
-
         val date = binding.textPayDay.text.toString()
         val valuePay = binding.editValue.getNumericValue().toString()
-        val value = amountToPay.toDouble() - valuePay.toDouble()
+        val value = (amountToPay.toDouble() - valuePay.toDouble())
         val numberOfMonth = intent.getStringExtra("numberOfMonth")!!
         val price = intent.getStringExtra("value")!!
 
@@ -71,7 +78,7 @@ class Payment : AppCompatActivity() {
         if (valuePay.isEmpty()){
             binding.editValue.error = "Insira o valor ser pago!"
         }
-        if (valuePay > amountToPay){
+        if (valuePay.toDouble() > amountToPay.toDouble()){
             binding.editValue.error = "Insira um valor menor ou igual ao valor em aberto!"
         }else if ((date.isNotEmpty() && valuePay.isNotEmpty()) && (valuePay == amountToPay)){
             db.collection("Rent").document(documentId).update(

@@ -83,9 +83,9 @@ class EditApartament : AppCompatActivity() {
                 energy = document.data!!["energy"].toString()
                 water = document.data!!["water"].toString()
 
-                binding.addEnergy.isVisible = (energy.isEmpty() || energy == "Sem número")
+                binding.addEnergy.isVisible = energy.isEmpty()
                 binding.addWater.isVisible = water.isEmpty()
-                binding.addNumber.isVisible = number.isEmpty()
+                binding.addNumber.isVisible = (number.isEmpty() || number == "Sem número")
             }.addOnFailureListener {
                 Log.d(TAG, it.toString())
             }

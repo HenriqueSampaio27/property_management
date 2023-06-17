@@ -14,6 +14,8 @@ import com.henriqueapps.administraoDeApartamentos.databinding.ActivityNotificati
 import com.henriqueapps.administraoDeApartamentos.model.NotificationsModel
 import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import kotlin.math.abs
@@ -99,7 +101,9 @@ class Notifications : AppCompatActivity() {
 
         val currentCalendar = Calendar.getInstance().time
         val currentData = dataFormat.format(currentCalendar)
-        val comparison = dueDate.compareTo(currentData)
+
+        val dueDateTwo = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(dueDate))
+        val dateCurrent = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(currentData))
 
         val days = abs(ChronoUnit.DAYS.between(currentCalendar.toInstant(), calendar.toInstant()))
         val number: String = if (numberOrigin == "Sem número"){
@@ -108,9 +112,9 @@ class Notifications : AppCompatActivity() {
             " Nº$numberOrigin"
         }
 
-        if(comparison > 0){
+        if(dateCurrent.isAfter(dueDateTwo)){
             val lateFeeValue = (price.toDouble() + (price.toDouble()*(days * lateFee.toDouble()/100))).toString()
-            listNotifications.add(NotificationsModel(image, "Aluguel atrasado", logradouro, number, lateFeeValue, date, documentID))
+            listNotifications.add(NotificationsModel(image, "Aluguel atrasado", logradouro, number, lateFeeValue, dueDate, documentID))
             adapterNotifications.notifyDataSetChanged()
 
         }

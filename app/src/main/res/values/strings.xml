@@ -38,7 +38,7 @@
     <string name="menu_settings">Configurações</string>
 
     //Apartament list fragment strings
-    <string name="register_a_property">Cadastrar uma propriedade!</string>
+    <string name="register_a_property">Cadastre uma propriedade!</string>
 
     //Detail screen strings
     <string name="text_rent">Aluguel</string>

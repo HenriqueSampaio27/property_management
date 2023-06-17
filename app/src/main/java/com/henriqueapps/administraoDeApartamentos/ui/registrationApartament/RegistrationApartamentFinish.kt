@@ -24,9 +24,9 @@ import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.henriqueapps.administraoDeApartamentos.pages.HomeActivity
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRegistrationApartamentFinishBinding
+import com.henriqueapps.administraoDeApartamentos.pages.HomeActivity
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
@@ -339,6 +339,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
             val usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
 
             val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             if(uriOne.toString().isNotEmpty() && uriTwo.toString().isNotEmpty() && uriTree.toString()
                     .isNotEmpty()) {
                 referenceOne.putFile(uriOne).addOnSuccessListener {

@@ -34,7 +34,6 @@ class Registration : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistrationBinding
     private lateinit var dialog: AlertDialog
-    private var byte: ByteArray = "".toByteArray()
     private lateinit var usuarioId : String
     private val REQUEST_IMAGE_CAPTURE = 1
     private var uri : Uri = Uri.EMPTY
@@ -157,7 +156,9 @@ class Registration : AppCompatActivity() {
     private fun saveUser(name: String, lastName: String, phone: String) {
         val archiveName = UUID.randomUUID().toString()
         val reference = FirebaseStorage.getInstance().getReference("/imagens/$archiveName")
-        if(byte.toString().isEmpty()){
+        binding.progressCircular.isVisible = true
+        binding.progressCircular.isFocused
+        if(uri.toString().isEmpty()){
             val db = FirebaseFirestore.getInstance()
             val usuarios: MutableMap<String, String> = HashMap()
             usuarios["name"] = name
@@ -168,10 +169,10 @@ class Registration : AppCompatActivity() {
             usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
             val documentReference = db.collection("Usuarios").document(usuarioId)
             documentReference.set(usuarios).addOnSuccessListener {
-                binding.progressCircular.isVisible = true
                 Toast.makeText(this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT)
                     .show()
-
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
                 finish()
             }.addOnFailureListener {
                 binding.progressCircular.isVisible = false
@@ -191,9 +192,10 @@ class Registration : AppCompatActivity() {
                     usuarioId = FirebaseAuth.getInstance().currentUser!!.uid
                     val documentReference = db.collection("Usuarios").document(usuarioId)
                     documentReference.set(usuarios).addOnSuccessListener {
-                        binding.progressCircular.isVisible = true
                         Toast.makeText(this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT)
                             .show()
+                        val intent = Intent(this, HomeActivity::class.java)
+                        startActivity(intent)
                         finish()
                     }.addOnFailureListener {
                         binding.progressCircular.isVisible = false

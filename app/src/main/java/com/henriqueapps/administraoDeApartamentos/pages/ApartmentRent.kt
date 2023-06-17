@@ -118,17 +118,20 @@ class ApartmentRent : AppCompatActivity() {
 
     }
 
-    private fun getLateFee(){
+    private fun getLateFee(): Boolean {
         lateFee = binding.editLateFee.text.toString()
 
+        var confirmed = true
         if (lateFee.toDouble() > 10.0){
             binding.editLateFee.error = "Insira um valor menor que 10%!"
+            confirmed = false
         }else if(lateFee.isEmpty()) {
             lateFee = ""
         }else{
             val value = lateFee.toDouble()/30
             lateFee = value.toString()
         }
+        return confirmed
     }
 
     private fun saveData(){
@@ -138,28 +141,31 @@ class ApartmentRent : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val documentId = intent.getStringExtra("documentId")!!
 
-        getLateFee()
-        if (date.isEmpty()){
-            Toast.makeText(this, "Insira a data de entrada!", Toast.LENGTH_SHORT).show()
-        }else{
-            val rent: MutableMap<String, String> = HashMap()
-            rent["renter"] = renter
-            rent["date"] = date
-            rent["confirmedPrice"] = newPrice
-            rent["amountToPay"] = newPrice
-            rent["observation"] = observation
-            rent["numberOfMonth"] = "1"
-            rent["lateFee"] = lateFee
+
+        if (getLateFee()) {
+            if (date.isEmpty()) {
+                Toast.makeText(this, "Insira a data de entrada!", Toast.LENGTH_SHORT).show()
+            } else {
+                val rent: MutableMap<String, String> = HashMap()
+                rent["renter"] = renter
+                rent["date"] = date
+                rent["confirmedPrice"] = newPrice
+                rent["amountToPay"] = newPrice
+                rent["observation"] = observation
+                rent["numberOfMonth"] = "0"
+                rent["lateFee"] = lateFee
+                rent["lastPaymentDate"] = ""
 
 
-            db.collection("Rent").document(documentId).set(rent)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Aluguel salvo com sucesso!", Toast.LENGTH_SHORT).show()
-                    finish()
-                }.addOnFailureListener {
-                    Log.d(TAG, it.toString())
-                }
+                db.collection("Rent").document(documentId).set(rent)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Aluguel salvo com sucesso!", Toast.LENGTH_SHORT)
+                            .show()
+                        finish()
+                    }.addOnFailureListener {
+                        Log.d(TAG, it.toString())
+                    }
+            }
         }
-
     }
 }

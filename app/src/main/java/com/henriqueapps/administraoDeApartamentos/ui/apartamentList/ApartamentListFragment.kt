@@ -1,11 +1,13 @@
 package com.henriqueapps.administraoDeApartamentos.ui.apartamentList
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.media.Image
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +69,6 @@ class ApartamentListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         getApartament()
-
     }
 
     override fun onDestroyView() {
@@ -82,9 +83,6 @@ class ApartamentListFragment : Fragment() {
 
         db.collection("Properties").whereEqualTo("owner", userUUID)
             .get().addOnSuccessListener {documents ->
-                if (documents == null){
-                    binding.textRegisterAProperty.isVisible = true
-                }
                 for (document in documents){
                     val documentId = document.id
                     var image = document.data["imageOne"].toString()
@@ -92,18 +90,24 @@ class ApartamentListFragment : Fragment() {
                     val logradouro = document.data["logradouro"].toString()
                     val number = document.data["number"].toString()
                     val type = document.data["type"].toString()
-
                     if (image.isEmpty()){
                         db.collection("Aplication").document("aplicationLogo")
                             .addSnapshotListener { value, error ->
                                 if (value != null){
                                     image = value.getString("logo")!!
+                                    listApartament.add(Apartament(price,logradouro, number, image,  documentId, type))
+                                    adapterApartament.notifyDataSetChanged()
+
+                                    binding.textRegisterAProperty.isVisible = listApartament.size == 0
                                 }
                             }
+
+                    }else{
+                        listApartament.add(Apartament(price,logradouro, number, image,  documentId, type))
+                        adapterApartament.notifyDataSetChanged()
                     }
-                    listApartament.add(Apartament(price,logradouro, number, image,  documentId, type))
-                    adapterApartament.notifyDataSetChanged()
                 }
+                binding.textRegisterAProperty.isVisible = listApartament.size == 0
             }
     }
 

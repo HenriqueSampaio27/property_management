@@ -22,9 +22,12 @@ import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityDetailBinding
 import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @SuppressLint("SetTextI18n")
 class Detail : AppCompatActivity() {
@@ -101,11 +104,12 @@ class Detail : AppCompatActivity() {
 
         val currentCalendar = Calendar.getInstance().time
         val currentData = dataFormat.format(currentCalendar)
-        val comparison = dueDate.compareTo(currentData)
 
+        val dueDateTwo = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(dueDate))
+        val dateCurrent = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(currentData))
         val days = abs(ChronoUnit.DAYS.between(currentCalendar.toInstant(), calendar.toInstant()))
 
-        if (comparison > 0){
+        if (dateCurrent.isAfter(dueDateTwo)){
             binding.daysDelay.isVisible = true
             binding.txtDaysDelay.isVisible = true
             if (days.toInt() == 1){
@@ -116,10 +120,13 @@ class Detail : AppCompatActivity() {
         }
 
         if(amountToPay.toDouble() == price.toDouble()){
-            if(comparison > 0){
+            if (dateCurrent.isAfter(dueDateTwo)){
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
                 val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee/100))
+
+                val dd = (lateFeeValue * 100.0).roundToInt()/100.0
+                this.amountToPay = dd.toString()
                 binding.rentPrice.text = "R$ ${decimalFormat(lateFeeValue)}"
             }else{
                 binding.txtRentPrice.isVisible = true
@@ -127,10 +134,13 @@ class Detail : AppCompatActivity() {
                 binding.rentPrice.text = "R$ $rentPrice"
             }
         }else{
-            if(comparison > 0){
+            if (dateCurrent.isAfter(dueDateTwo)){
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
                 val lateFeeValue = amountToPay.toDouble() + (amountToPay.toDouble()*(days * lateFee/100))
+
+                val dd = (lateFeeValue * 100.0).roundToInt()/100.0
+                this.amountToPay = dd.toString()
                 binding.rentPrice.text = "R$ ${decimalFormat(lateFeeValue)}"
             }else{
                 binding.txtRentPrice.isVisible = true
@@ -217,7 +227,14 @@ class Detail : AppCompatActivity() {
                     val slideImageTree = SlideModel(imageTree)
                     slidesList.add(slideImageTree)
                 }
-                binding.viewSlider.setImageList(slidesList)
+                if(slidesList.size != 0){
+                    binding.viewSlider.setImageList(slidesList)
+                }else if(slidesList.size < 1){
+                    val slideImage = SlideModel(R.drawable.logo)
+                    slidesList.add(slideImage)
+                    binding.viewSlider.setImageList(slidesList)
+                }
+
                 binding.txtType.text = type
                 binding.txtPrice.text = "R$ ${decimalFormat(price.toDouble())}"
                 binding.localization.text = "$logradouro$number, $district, $city-$state, $cep"
@@ -303,6 +320,7 @@ class Detail : AppCompatActivity() {
                 intent.putExtra("value", price)
                 intent.putExtra("amountToPay", amountToPay)
                 intent.putExtra("documentId", documentId)
+                intent.putExtra("numberOfMonth", numberOfMonth)
                 startActivity(intent)
             }else{
                 Toast.makeText(this, "A propriedade não está alugada!", Toast.LENGTH_SHORT).show()
@@ -355,6 +373,9 @@ class Detail : AppCompatActivity() {
         db.collection("Properties").document(document)
             .delete().addOnSuccessListener {
                 Toast.makeText(this, "Propriedade excluida com sucesso!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 finish()
             }.addOnFailureListener {
                 Log.d(TAG, it.toString())
