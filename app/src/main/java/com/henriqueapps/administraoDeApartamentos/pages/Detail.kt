@@ -71,12 +71,11 @@ class Detail : AppCompatActivity() {
             binding.cardView.isVisible = false
         }, 500)
 
-        rentData()
     }
 
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
-    private fun rentedOrLeased(rent: String, date: String, price: String, observation: String, numberOfMonth: Int, lateFee: Double, amountToPay : String, lastPaymentDate: String) {
+    private fun rentedOrLeased(rent: String, date: String, price: String, observation: String, numberOfMonth: Int, lateFee: String, amountToPay : String, lastPaymentDate: String) {
 
         binding.statusInfo.text = "Alugado"
         state = true
@@ -120,10 +119,10 @@ class Detail : AppCompatActivity() {
         }
 
         if(amountToPay.toDouble() == price.toDouble()){
-            if (dateCurrent.isAfter(dueDateTwo)){
+            if (dateCurrent.isAfter(dueDateTwo) && lateFee.isNotEmpty()){
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
-                val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee/100))
+                val lateFeeValue = rentPrice.toDouble() + (rentPrice.toDouble()*(days * lateFee.toDouble()/100))
 
                 val dd = (lateFeeValue * 100.0).roundToInt()/100.0
                 this.amountToPay = dd.toString()
@@ -134,10 +133,10 @@ class Detail : AppCompatActivity() {
                 binding.rentPrice.text = "R$ $rentPrice"
             }
         }else{
-            if (dateCurrent.isAfter(dueDateTwo)){
+            if (dateCurrent.isAfter(dueDateTwo) && lateFee.isNotEmpty()){
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
-                val lateFeeValue = amountToPay.toDouble() + (amountToPay.toDouble()*(days * lateFee/100))
+                val lateFeeValue = amountToPay.toDouble() + (amountToPay.toDouble()*(days * lateFee.toDouble()/100))
 
                 val dd = (lateFeeValue * 100.0).roundToInt()/100.0
                 this.amountToPay = dd.toString()
@@ -170,7 +169,7 @@ class Detail : AppCompatActivity() {
                     val price = result.data!!["confirmedPrice"].toString()
                     val observation = result.data!!["observation"].toString()
                     val numberOfMonth = result.data!!["numberOfMonth"].toString().toInt()
-                    val lateFee = result.data!!["lateFee"].toString().toDouble()
+                    val lateFee = result.data!!["lateFee"].toString()
                     val amountToPay = result.data!!["amountToPay"].toString()
                     val lastPaymentDate = result.data!!["lastPaymentDate"].toString()
 
@@ -187,6 +186,7 @@ class Detail : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         getDocuments()
+        rentData()
     }
 
     @SuppressLint("SetTextI18n")

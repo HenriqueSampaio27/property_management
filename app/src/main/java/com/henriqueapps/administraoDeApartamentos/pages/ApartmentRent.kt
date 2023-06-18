@@ -122,11 +122,11 @@ class ApartmentRent : AppCompatActivity() {
         lateFee = binding.editLateFee.text.toString()
 
         var confirmed = true
-        if (lateFee.toDouble() > 10.0){
+        if(lateFee.isEmpty()) {
+            lateFee = ""
+        }else if (lateFee.toDouble() > 10.0){
             binding.editLateFee.error = "Insira um valor menor que 10%!"
             confirmed = false
-        }else if(lateFee.isEmpty()) {
-            lateFee = ""
         }else{
             val value = lateFee.toDouble()/30
             lateFee = value.toString()

@@ -145,7 +145,6 @@ class RentedApartamentRent : AppCompatActivity() {
         ))
             .addOnSuccessListener {
                 Toast.makeText(this, "Aluguel salvo com sucesso!", Toast.LENGTH_SHORT).show()
-                finish()
             }.addOnFailureListener {
                 Log.d(TAG, it.toString())
             }

@@ -19,7 +19,7 @@ fun EditText.setOnEnterKeyListener(action: () -> Unit = {}) {
 
 fun decimalFormat(number: Double): String {
 
-    val standart = "###,###.00"
+    val standart = "###,##0.00"
 
     val decimalFormatSymbols = DecimalFormatSymbols(Locale("pt", "Brazil"))
     decimalFormatSymbols.decimalSeparator = ','
