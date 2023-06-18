@@ -2,6 +2,7 @@ package com.henriqueapps.administraoDeApartamentos.pages
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -113,6 +115,7 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onStart() {
         super.onStart()
         getNotifications()
@@ -127,16 +130,18 @@ class HomeActivity : AppCompatActivity() {
 
         documentReference.addSnapshotListener { value, _ ->
             if (value != null) {
+                Log.d(TAG, value.getString("image").toString())
                 if(value.getString("image")!!.isNotEmpty() || value.getString("image") != null){
                     Glide.with(applicationContext).load(value.getString("image")).into(navUserImage)
-                }else{
-                    db.collection("Aplication").document("aplicationLogo")
-                        .addSnapshotListener { v, error ->
-                            if (v != null){
-                                Glide.with(applicationContext).load(v.getString("logo")!!).into(navUserImage)
-                            }
+                }else if(value.getString("image").toString().isEmpty()){
+                    db.collection("Aplication").document("aplicationLogo").get()
+                        .addOnSuccessListener { document ->
+                            val image = document.data!!["logo"].toString().toUri()
+                                Glide.with(applicationContext).load(image)
+                                    .into(navUserImage)
                         }
                 }
+
                 navUsername.text = value.getString("name")!!
                 navUserEmail.text = emailID
             }
