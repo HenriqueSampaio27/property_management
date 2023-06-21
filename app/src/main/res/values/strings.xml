@@ -95,9 +95,9 @@
     <string name="notifi_null">Sem notificações</string>
 
     //edit_apartament screen strings
-    <string name="add_energy">Adicionar conta de energia</string>
-    <string name="add_water">Adicionar conta de água</string>
-    <string name="add_number">Adicionar número da casa</string>
+    <string name="add_energy">Alterar conta de energia</string>
+    <string name="add_water">Alterar conta de água</string>
+    <string name="add_number">Alterar número da casa</string>
     <string name="add_image">Adiconar imagem</string>
     <string name="change_image">Alterar imagem</string>
     <string name="change_value">Alterar valor da propriedade</string>

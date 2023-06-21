@@ -7,12 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.google.firebase.firestore.FirebaseFirestore
-import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityEditApartamentBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogEnergyUpdateBinding
 import com.henriqueapps.administraoDeApartamentos.databinding.DialogNumberUpdateBinding
@@ -42,8 +40,6 @@ class EditApartament : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         documentId = intent.getStringExtra("documentId")!!
 
-        verificationOptions()
-
         binding.buttonBack.setOnClickListener {
             finish()
         }
@@ -70,22 +66,13 @@ class EditApartament : AppCompatActivity() {
             startActivity(intent)
         }
 
+        verificationRent()
     }
 
-    private fun verificationOptions(){
-        var number : String
-        var energy : String
-        var water : String
-
-        db.collection("Properties").document(documentId!!)
-            .get().addOnSuccessListener {   document ->
-                number = document.data!!["number"].toString()
-                energy = document.data!!["energy"].toString()
-                water = document.data!!["water"].toString()
-
-                binding.addEnergy.isVisible = energy.isEmpty()
-                binding.addWater.isVisible = water.isEmpty()
-                binding.addNumber.isVisible = (number.isEmpty() || number == "Sem número")
+    private fun verificationRent(){
+        db.collection("Rent").document(documentId).get()
+            .addOnSuccessListener { results ->
+                binding.changeValue.isVisible = !results.exists()
             }.addOnFailureListener {
                 Log.d(TAG, it.toString())
             }
@@ -97,15 +84,17 @@ class EditApartament : AppCompatActivity() {
             .setTitle("Insira o número da Propriedade")
             .setView(bindingNumber.root)
             .setPositiveButton("Salvar",
-                DialogInterface.OnClickListener { dialogInterface, id ->
+                DialogInterface.OnClickListener { _, _ ->
                     updateNumber = bindingNumber.updateNumber.text.toString()
-                    Log.d(TAG, updateNumber)
-                    db.collection("Properties").document(documentId)
-                        .update("number", updateNumber).addOnSuccessListener {
-                            Toast.makeText(this, "Número adicionado com sucesso!", Toast.LENGTH_SHORT).show()
-                        }.addOnFailureListener {
-                            Log.d(TAG, it.toString())
-                        }
+                    if(updateNumber.isNotEmpty()){
+                        db.collection("Properties").document(documentId)
+                            .update("number", updateNumber).addOnSuccessListener {
+                                Toast.makeText(this, "Número adicionado com sucesso!", Toast.LENGTH_SHORT).show()
+                            }.addOnFailureListener {
+                                Log.d(TAG, it.toString())
+                            }
+                    }
+
                 })
             .setNegativeButton("Cancelar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
@@ -125,12 +114,15 @@ class EditApartament : AppCompatActivity() {
             .setPositiveButton("Atualizar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
                     updateValue = bindingValue.updateValue.getNumericValue().toString()
-                    db.collection("Properties").document(documentId)
-                        .update("price", updateValue).addOnSuccessListener {
-                            Toast.makeText(this, "Valor atualizado com sucesso!", Toast.LENGTH_SHORT).show()
-                        }.addOnFailureListener {
-                            Log.d(TAG, it.toString())
-                        }
+                    if(updateValue.isNotEmpty()){
+                        db.collection("Properties").document(documentId)
+                            .update("price", updateValue).addOnSuccessListener {
+                                Toast.makeText(this, "Valor atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                            }.addOnFailureListener {
+                                Log.d(TAG, it.toString())
+                            }
+                    }
+
                 })
             .setNegativeButton("Cancelar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
@@ -151,12 +143,14 @@ class EditApartament : AppCompatActivity() {
             .setPositiveButton("Salvar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
                     updateWater = bindingWater.waterUpdate.text.toString()
-                    db.collection("Properties").document(documentId)
-                        .update("water", updateWater).addOnSuccessListener {
-                            Toast.makeText(this, "Matricula de água adicionada com sucesso!", Toast.LENGTH_SHORT).show()
-                        }.addOnFailureListener {
-                            Log.d(TAG, it.toString())
-                        }
+                    if(updateWater.isNotEmpty()){
+                        db.collection("Properties").document(documentId)
+                            .update("water", updateWater).addOnSuccessListener {
+                                Toast.makeText(this, "Matricula de água adicionada com sucesso!", Toast.LENGTH_SHORT).show()
+                            }.addOnFailureListener {
+                                Log.d(TAG, it.toString())
+                            }
+                    }
                 })
             .setNegativeButton("Cancelar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
@@ -177,12 +171,14 @@ class EditApartament : AppCompatActivity() {
             .setPositiveButton("Salvar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
                     updateEnergy = bindingEnergy.energyUpdate.text.toString()
-                    db.collection("Properties").document(documentId)
-                        .update("energy", updateEnergy).addOnSuccessListener {
-                            Toast.makeText(this, "Conta contrato adicionada com sucesso!", Toast.LENGTH_SHORT).show()
-                        }.addOnFailureListener {
-                            Log.d(TAG, it.toString())
-                        }
+                    if(updateEnergy.isNotEmpty()){
+                        db.collection("Properties").document(documentId)
+                            .update("energy", updateEnergy).addOnSuccessListener {
+                                Toast.makeText(this, "Conta contrato adicionada com sucesso!", Toast.LENGTH_SHORT).show()
+                            }.addOnFailureListener {
+                                Log.d(TAG, it.toString())
+                            }
+                    }
                 })
             .setNegativeButton("Cancelar",
                 DialogInterface.OnClickListener { dialogInterface, id ->
