@@ -17,7 +17,6 @@ import com.henriqueapps.administraoDeApartamentos.databinding.ActivityRentedApar
 import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
 import com.henriqueapps.administraoDeApartamentos.useful.setOnEnterKeyListener
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 @SuppressLint("SetTextI18n")
 class RentedApartamentRent : AppCompatActivity() {
 
@@ -49,7 +48,7 @@ class RentedApartamentRent : AppCompatActivity() {
             val documentId = intent.getStringExtra("documentId")!!
 
             db.collection("Rent").document(documentId).delete()
-                .addOnFailureListener {
+                .addOnSuccessListener {
                     finish()
                 }.addOnFailureListener {
                     Log.d(TAG, it.toString())

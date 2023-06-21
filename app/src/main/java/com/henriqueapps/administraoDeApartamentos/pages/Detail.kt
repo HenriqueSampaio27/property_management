@@ -130,7 +130,7 @@ class Detail : AppCompatActivity() {
             }else{
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
-                binding.rentPrice.text = "R$ $rentPrice"
+                binding.rentPrice.text = "R$ ${decimalFormat(rentPrice.toDouble())}"
             }
         }else{
             if (dateCurrent.isAfter(dueDateTwo) && lateFee.isNotEmpty()){
@@ -144,7 +144,7 @@ class Detail : AppCompatActivity() {
             }else{
                 binding.txtRentPrice.isVisible = true
                 binding.rentPrice.isVisible = true
-                binding.rentPrice.text = "R$ $amountToPay"
+                binding.rentPrice.text = "R$ ${decimalFormat(amountToPay.toDouble())}"
             }
         }
 
