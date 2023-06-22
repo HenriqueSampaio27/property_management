@@ -119,7 +119,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editNumber"
                 android:hint="@string/hint_number"
-                android:inputType="number"
+                android:inputType="text"
                 style="@style/EditText_Form"
                 />
 
