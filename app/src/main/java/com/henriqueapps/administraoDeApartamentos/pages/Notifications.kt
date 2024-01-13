@@ -5,6 +5,7 @@ import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -58,7 +59,13 @@ class Notifications : AppCompatActivity() {
             .get().addOnSuccessListener {documents ->
                 for (document in documents){
                     val documentId = document.id
-                    val image = document.data["imageOne"].toString()
+                    var image = document.data["imageOne"].toString()
+                        if(document.data["imageOne"].toString().isEmpty()){
+                            db.collection("Aplication").document("aplicationLogo").get()
+                                .addOnSuccessListener { document ->
+                                    image = document.data!!["logo"].toString()
+                                }
+                    }
                     val logradouro = document.data["logradouro"].toString()
                     val number = document.data["number"].toString()
                     db.collection("Rent").document(documentId).get()
@@ -113,7 +120,11 @@ class Notifications : AppCompatActivity() {
         }
 
         if(dateCurrent.isAfter(dueDateTwo)){
-            val lateFeeValue = (price.toDouble() + (price.toDouble()*(days * lateFee.toDouble()/100))).toString()
+            val lateFeeValue: String = if(lateFee.isNotEmpty()){
+                (price.toDouble() + (price.toDouble()*(days * lateFee.toDouble()/100))).toString()
+            }else{
+                price
+            }
             listNotifications.add(NotificationsModel(image, "Aluguel atrasado", logradouro, number, lateFeeValue, dueDate, documentID))
             adapterNotifications.notifyDataSetChanged()
 

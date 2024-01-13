@@ -16,6 +16,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -39,7 +40,8 @@ class Registration : AppCompatActivity() {
     private var uri : Uri = Uri.EMPTY
 
     companion object{
-        private val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private val GALLERY_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
     }
 
     private val galleryRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()){ permission ->
@@ -181,7 +183,7 @@ class Registration : AppCompatActivity() {
         }else{
             reference.putFile(uri).addOnSuccessListener {
                 reference.downloadUrl.addOnSuccessListener {    uriFirestore ->
-                    var uriImage = uriFirestore.toString()
+                    val uriImage = uriFirestore.toString()
                     val db = FirebaseFirestore.getInstance()
                     val usuarios: MutableMap<String, String> = HashMap()
                     usuarios["name"] = name
@@ -238,6 +240,7 @@ class Registration : AppCompatActivity() {
     private fun permissionVerification(permission : String) =
         ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun galleryPermissionVerification(){
         val galleryPermission = permissionVerification(GALLERY_PERMISSION)
 

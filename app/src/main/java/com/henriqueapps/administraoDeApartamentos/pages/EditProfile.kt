@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -43,7 +44,8 @@ class EditProfile : AppCompatActivity() {
     private val REQUEST_IMAGE_CAPTURE = 1
 
     companion object{
-        private val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private val GALLERY_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
     }
 
     private val galleryRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()){ permission ->
@@ -246,8 +248,9 @@ class EditProfile : AppCompatActivity() {
     private fun permissionVerification(permission : String) =
         ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun galleryPermissionVerification(){
-        val galleryPermission = permissionVerification(EditProfile.GALLERY_PERMISSION)
+        val galleryPermission = permissionVerification(GALLERY_PERMISSION)
 
         when{
             galleryPermission -> {

@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -45,7 +46,8 @@ class RegistrationApartamentFinish : AppCompatActivity() {
     private var uriTree: Uri = Uri.EMPTY
 
     companion object {
-        private val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private val GALLERY_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
     }
 
     private val galleryRequest =
@@ -192,6 +194,7 @@ class RegistrationApartamentFinish : AppCompatActivity() {
     private fun permissionVerification(permission: String) =
         ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun galleryPermissionVerification() {
         val galleryPermission =
             permissionVerification(GALLERY_PERMISSION)
@@ -301,7 +304,6 @@ class RegistrationApartamentFinish : AppCompatActivity() {
         val title = UUID.randomUUID().toString()
         val bytes = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        //val imageBitmap2 = Bitmap.createScaledBitmap(imageBitmap, 1000, 800, true)
         val paths = Images.Media.insertImage(applicationContext!!.contentResolver, imageBitmap, title, null)
         return Uri.parse(paths)
 

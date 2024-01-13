@@ -22,6 +22,10 @@ import com.henriqueapps.administraoDeApartamentos.databinding.FragmentApartament
 import com.henriqueapps.administraoDeApartamentos.model.Apartament
 import com.henriqueapps.administraoDeApartamentos.ui.registrationApartament.RegistrationApartament
 import com.henriqueapps.administraoDeApartamentos.useful.startActivity
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
 class ApartamentListFragment : Fragment() {
@@ -80,7 +84,6 @@ class ApartamentListFragment : Fragment() {
     private fun getApartament(){
         val db = FirebaseFirestore.getInstance()
         val userUUID = FirebaseAuth.getInstance().currentUser!!.uid
-
         db.collection("Properties").whereEqualTo("owner", userUUID)
             .get().addOnSuccessListener {documents ->
                 for (document in documents){

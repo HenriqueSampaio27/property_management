@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.collection.LLRBNode
 import com.google.firebase.firestore.FirebaseFirestore
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityDetailBinding
@@ -189,7 +190,7 @@ class Detail : AppCompatActivity() {
         rentData()
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceAsColor")
     private fun getDocuments(){
         val db = FirebaseFirestore.getInstance()
         val documentId = intent.getStringExtra("documentId")

@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -49,7 +50,8 @@ class AddImage : AppCompatActivity() {
     private var imageTree : Boolean = true
 
     companion object {
-        private const val GALLERY_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private const val GALLERY_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -436,9 +438,10 @@ class AddImage : AppCompatActivity() {
     private fun permissionVerification(permission: String) =
         ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun galleryPermissionVerification() {
         val galleryPermission =
-            permissionVerification(AddImage.GALLERY_PERMISSION)
+            permissionVerification(GALLERY_PERMISSION)
 
         when {
             galleryPermission -> {
@@ -450,9 +453,9 @@ class AddImage : AppCompatActivity() {
                 )
             }
 
-            shouldShowRequestPermissionRationale(AddImage.GALLERY_PERMISSION) -> showDialogPermission()
+            shouldShowRequestPermissionRationale(GALLERY_PERMISSION) -> showDialogPermission()
 
-            else -> galleryRequest.launch(AddImage.GALLERY_PERMISSION)
+            else -> galleryRequest.launch(GALLERY_PERMISSION)
         }
     }
 

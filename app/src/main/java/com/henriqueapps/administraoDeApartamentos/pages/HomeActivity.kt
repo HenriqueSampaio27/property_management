@@ -31,7 +31,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.henriqueapps.administraoDeApartamentos.R
 import com.henriqueapps.administraoDeApartamentos.databinding.ActivityHomeBinding
 import com.henriqueapps.administraoDeApartamentos.model.Apartament
+import com.henriqueapps.administraoDeApartamentos.useful.decimalFormat
 import de.hdodenhof.circleimageview.CircleImageView
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Calendar
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class HomeActivity : AppCompatActivity() {
 
@@ -106,7 +114,9 @@ class HomeActivity : AppCompatActivity() {
                     db.collection("Rent").document(documentId).get()
                         .addOnSuccessListener { result ->
                             if (result.exists()) {
-                                mNotifiItemCount += 1
+                                val dateRent = result.data!!["date"].toString()
+                                val numberOfMonth = result.data!!["numberOfMonth"].toString().toInt()
+                                notificationsAmount(dateRent, numberOfMonth)
                             }
                         }
                 }
@@ -115,7 +125,33 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
-    @SuppressLint("SuspiciousIndentation")
+    @SuppressLint("SimpleDateFormat")
+    private fun notificationsAmount(date: String, numberOfMonth: Int) {
+
+        val dataFormat = SimpleDateFormat("dd/MM/yyyy")
+
+        val calendar = Calendar.getInstance()
+        calendar.set(
+            "${date[6]}${date[7]}${date[8]}${date[9]}".toInt(),
+            "${date[3]}${date[4]}".toInt(),
+            "${date[0]}${date[1]}".toInt()
+        )
+        calendar.add(Calendar.MONTH, numberOfMonth)
+        val dueDate = dataFormat.format(calendar.time)
+
+        val currentCalendar = Calendar.getInstance().time
+        val currentData = dataFormat.format(currentCalendar)
+
+        val dueDateTwo = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(dueDate))
+        val dateCurrent =
+            LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(currentData))
+
+        if (dateCurrent.isAfter(dueDateTwo)) {
+            mNotifiItemCount += 1
+        }
+    }
+
+        @SuppressLint("SuspiciousIndentation")
     override fun onStart() {
         super.onStart()
         getNotifications()
